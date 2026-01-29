@@ -7,7 +7,7 @@ function Navbar({
   title="IdeaSpark"
 }){
     return(
-        <nav className="bg-gray-700 flex px-6 py-3 justify-between items-center sticky top-0">
+        <nav className="bg-gray-700 flex p-4 justify-between items-center sticky top-0">
       
       {/* LEFT */}
       <h1 className="font-bold text-white text-lg">
