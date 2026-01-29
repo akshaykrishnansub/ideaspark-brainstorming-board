@@ -34,7 +34,7 @@ const Signup = () => {
             <button type='submit' className='w-full bg-amber-600 p-2 text-white rounded cursor-pointer hover:bg-amber-700 font-semibold transition'>Sign Up</button>
           </div>
         </form>
-        <p className="text-center text-sm mt-4">Already have an account? {" "}<Link to="/login" className='hover:text-amber-700'>Login</Link></p>
+        <p className="text-center text-sm mt-4">Already have an account?{" "}<Link to="/login" className='hover:text-amber-700'>Login</Link></p>
       </div>
     </div>
     </>
