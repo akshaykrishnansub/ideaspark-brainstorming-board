@@ -1,11 +1,35 @@
 import Navbar from "../components/Navbar"
+import { Link } from "react-router-dom"
 
 function Login(){
     return (
         <>
+        <title>IdeaSpark Login</title>
         <Navbar showLogin={false} showSignup={false} />
-        <div className="">
-
+        <div className="bg-gray-50 min-h-screen flex items-center justify-center px-2">
+            <form>
+                <div className="bg-white p-8 w-full max-w-md shadow-lg rounded-lg">
+                <h1 className="text-center font-bold mb-4 text-2xl">Login to Access IdeaSpark</h1>
+                <label htmlFor="email" className="font-medium">Username/Email</label>
+                <input type="text" 
+                className="w-full p-2 mt-4 border rounded mb-4"
+                name="email"
+                placeholder="Enter your email"
+                />
+                <div>
+                    <label htmlFor="password" className="font-medium mt-4">Password</label>
+                    <input type="password" 
+                    className="w-full p-2 mt-4 border rounded"
+                    name="password"
+                    placeholder="Enter the password"
+                    />
+                </div>
+                <div>
+                    <button type="submit" className="w-full bg-amber-600 p-2 mt-4 text-white rounded hover:bg-amber-700 cursor-pointer transition">Login</button>
+                </div>
+                <p className="text-center p-2 text-sm">Dont have an account yet?{" "}<Link to="/signup" className="hover:text-amber-600">Signup</Link></p>
+                </div>
+            </form>
         </div>
         </>
     )

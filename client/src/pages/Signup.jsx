@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 const Signup = () => {
   return (
     <>
+    <title>IdeaSpark | Signup</title>
     <Navbar showLogin={false} showSignup={false} />
     <div className='px-2 bg-gray-100 min-h-screen flex items-center justify-center'>
       <div className="bg-white p-8 w-full max-w-md rounded-xl shadow-lg">
@@ -27,6 +28,7 @@ const Signup = () => {
             </label>
             <input type="password"
             placeholder='Enter your password here'
+            name="password"
             className='w-full border p-3 mt-4 rounded'
             />
           </div>
