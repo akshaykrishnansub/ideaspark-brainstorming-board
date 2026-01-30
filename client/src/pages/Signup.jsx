@@ -1,8 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import { Link } from 'react-router-dom'
 
 const Signup = () => {
+
+  //setting initial values
+  const [formData,setFormData]=useState({
+    username : "",
+    password : ""
+  });
+
+  const [error,setError]=useState("");
+  //Generic change handler
+  const handleChange=(event)=>{
+    const {name,value}=event.target
+    setFormData((prevData)=>({
+      ...prevData,//Keeping existing values
+      [name]:value
+    }))
+  }
+
+  const handleSubmit=(event)=>{
+    event.preventDefault();
+    if(formData.username===""||formData.password){
+      setError("All fields required");
+      return;
+    }
+  }
+
   return (
     <>
     <title>IdeaSpark | Signup</title>
@@ -11,15 +36,18 @@ const Signup = () => {
       <div className="bg-white p-8 w-full max-w-md rounded-xl shadow-lg">
         <h2 className='text-2xl font-bold text-center'>Create an Account for Free</h2>
         <p className='text-center p-2'>No credit card required</p>
-        <form className='space-y-4'>
+        <form className='space-y-4' onSubmit={handleSubmit}>
           <div>
             <label htmlFor="username" className='text-sm font-medium mb-0.5'>
               Username/Email
             </label>
-            <input type="text"
+            <input type="email"
             className='w-full p-3 mt-4 border rounded'
             name="username"
             placeholder='Enter your username or email here'
+            value={formData.username}
+            onChange={handleChange}
+            required
             />
           </div>
           <div>
@@ -30,6 +58,9 @@ const Signup = () => {
             placeholder='Enter your password here'
             name="password"
             className='w-full border p-3 mt-4 rounded'
+            value={formData.password}
+            onChange={handleChange}
+            required
             />
           </div>
           <div>
