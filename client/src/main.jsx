@@ -6,7 +6,7 @@ import {createBrowserRouter,RouterProvider} from "react-router-dom"
 import Login from "./pages/Login.jsx"
 import Signup from './pages/Signup.jsx'
 import Home from './pages/Home.jsx'
-import Dashboard from './pages/dashboard.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 import Board from './pages/Board.jsx'
 
 const router=createBrowserRouter([
