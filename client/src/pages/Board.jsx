@@ -2,9 +2,13 @@ import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 
 const Board = () => {
-  const [showModal,setShowModal]=useState(false); //for modal
+  const [showModal,setShowModal]=useState(false); //for board modal
   const [boardName,setBoardName]=useState('') // for board name input
   const [savedBoardName,setSavedBoardName]=useState('') //for saving the board's name
+
+  const [showCategoryModal,setShowCategoryModal]=useState(false); //for category modal
+  const [categoryName,setCategoryName]=useState(''); //for category name input
+  const [savedCategoryName,setSavedCategoryName]=useState([]); //for saving category's name
 
   const handleSaveBoardName=()=>{
     if(!boardName.trim()){
@@ -13,6 +17,15 @@ const Board = () => {
     setShowModal(false); //close the modal
     setBoardName(''); // clear the boardName
     setSavedBoardName(boardName); // set the board name
+  }
+
+  const handleSaveCategoryName=()=>{
+    if(!categoryName.trim()){
+      return;
+    }
+    setShowCategoryModal(false); //close the category modal
+    setCategoryName(''); // clear the category name
+    setSavedCategoryName(prev=>[...prev,categoryName]); // set the category name
   }
 
   return (
@@ -31,11 +44,26 @@ const Board = () => {
       <aside className='w-64 bg-blue-950 min-h-screen'>
       <div className='text-white pt-4 px-2 font-bold text-2xl hover:text-amber-600 cursor-pointer' onClick={()=>setShowModal(true)}>Name of the Board</div>
       <div className='text-white font-bold pt-4 px-2 text-2xl'>Category<br/>----------------------</div>
-      <div className='text-white px-2 hover:text-amber-600 cursor-pointer'>Add a Category</div>
+      <div className='text-white px-2 hover:text-amber-600 cursor-pointer' onClick={()=>setShowCategoryModal(true)}>Add a Category</div>
       <div className='px-2 pt-6 font-extrabold text-white text-3xl'>Invite Members to the board</div>
       </aside>
-      <main className='flex-1 bg-blue-900 h-14 text-3xl text-center p-2 text-white font-extrabold'>
+      <main className='flex-1 bg-blue-900 h-14 text-2xl text-center p-2 text-white font-extrabold'>
         {savedBoardName || 'No board created yet'}
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
+          {savedCategoryName.length===0?(
+              <p className='text-black text-2xl'>No Categories added yet.</p>
+          ):(
+            savedCategoryName.map((category,index)=>(
+              <div
+              key={index}
+              className='bg-blue-500 text-white px-6 py-4 rounded shadow-lg w-96'
+              >
+                <h3 className='text-xl font-bold'>{category}</h3>
+                <button className='bg-amber-600 rounded p-2 mt-6 hover:bg-amber-700'>+ Add An Idea</button>
+              </div>
+            ))
+          )}
+        </div>
       </main>
   </div>
   {showModal?(
@@ -46,6 +74,19 @@ const Board = () => {
         <div className='flex gap-2'>
           <button className='bg-blue-500 p-2 mt-4 text-white rounded' onClick={handleSaveBoardName}>Add Name</button>
           <button className='bg-red-700 p-2 mt-4 text-white rounded' onClick={()=>setShowModal(false)}>Cancel</button>
+        </div>
+      </div>
+    </div>
+  ):null}
+  
+  {showCategoryModal ? (
+    <div className='bg-black/55 backdrop-blur-sm fixed inset-0 flex justify-center items-center'>
+      <div className='bg-white w-96 p-6 text-center'>
+        <label htmlFor="categoryName" className='font-bold'>Add your Category Here:</label>
+        <input type="text" className='w-full p-2 rounded mt-4 border' value={categoryName} onChange={(e)=>{setCategoryName(e.target.value)}} />
+        <div className='flex gap-4 justify-center'>
+          <button className='bg-blue-500 p-2 mt-4 rounded' onClick={handleSaveCategoryName}>Add Category</button>
+          <button className='bg-red-500 p-2 mt-4 rounded' onClick={()=>setShowCategoryModal(false)}>Cancel</button>
         </div>
       </div>
     </div>
