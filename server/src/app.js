@@ -2,9 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import path from "path"
 import { fileURLToPath } from 'url'
-import dotenv from 'dotenv'
-
-dotenv.config();
+import './config/db.js'
 
 //recreate __dirname is ES modules
 const __filename=fileURLToPath(import.meta.url)
