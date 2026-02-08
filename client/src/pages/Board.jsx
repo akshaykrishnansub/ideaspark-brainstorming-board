@@ -10,6 +10,10 @@ const Board = () => {
   const [categoryName,setCategoryName]=useState(''); //for category name input
   const [savedCategoryName,setSavedCategoryName]=useState([]); //for saving category's name
 
+  const [activeCategoryId,setActiveCategoryId]=useState(null); //current category id
+  const [cardInput,setCardInput]=useState(''); //
+
+
   const handleSaveBoardName=()=>{
     if(!boardName.trim()){
       return;
@@ -23,9 +27,34 @@ const Board = () => {
     if(!categoryName.trim()){
       return;
     }
+
+    const newCategory={
+      id:Date.now(), //temporary frontend ID
+      name:categoryName,
+      cards:[] //array for storing cards
+    }
+
     setShowCategoryModal(false); //close the category modal
     setCategoryName(''); // clear the category name
-    setSavedCategoryName(prev=>[...prev,categoryName]); // set the category name
+    setSavedCategoryName(prev=>[...prev,newCategory]); // set the category name
+  }
+
+  const handleAddCard=(categoryId)=>{
+    if(!cardInput.trim()){
+      return;
+    }
+    setSavedCategoryName(prev=>
+      prev.map(category=>
+        category.id===categoryId
+        ?{
+          ...category,
+          cards:[...category.cards,cardInput]
+        }
+        : category
+      ),
+      setCardInput(''),
+      setActiveCategoryId(null)
+    )
   }
 
   return (
@@ -53,13 +82,33 @@ const Board = () => {
           {savedCategoryName.length===0?(
               <p className='text-black text-2xl'>No Categories added yet.</p>
           ):(
-            savedCategoryName.map((category,index)=>(
+            savedCategoryName.map(category=>(
               <div
-              key={index}
+              key={category.id}
               className='bg-blue-500 text-white px-6 py-4 rounded shadow-lg w-96'
               >
-                <h3 className='text-xl font-bold'>{category}</h3>
-                <button className='bg-amber-600 rounded p-2 mt-6 hover:bg-amber-700'>+ Add An Idea</button>
+                <h3 className='text-3xl font-extrabold'>{category.name}</h3>
+
+                <div className='mt-4 space-y-2'>
+                  {category.cards.map((card,index)=>(
+                    <div key={index} className='bg-blue-300 border p-2 font-normal'>
+                      {card}
+                    </div>
+                  ))}
+                </div>
+
+                {activeCategoryId!==category.id&&(
+                  <button className='bg-amber-600 rounded p-2 mt-6 hover:bg-amber-700' onClick={()=>setActiveCategoryId(category.id)}>+ Add An Idea</button>
+                )}
+                {activeCategoryId===category.id &&(
+                  <div>
+                    <textarea type='text' className='bg-white text-black mt-6 font-normal w-full' value={cardInput} onChange={(e)=>setCardInput(e.target.value)}/>
+                    <div className='flex gap-2.5'>
+                      <button className='bg-orange-600 p-2 mt-4' onClick={()=>handleAddCard(category.id)}>Add Idea</button>
+                      <button className='bg-red-600 p-2 mt-4' onClick={()=>{setActiveCategoryId(null),setCardInput('')}}>Cancel</button>
+                    </div>
+                  </div>
+                )}
               </div>
             ))
           )}
