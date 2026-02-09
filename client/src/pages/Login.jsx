@@ -18,12 +18,31 @@ function Login(){
         }))
     }
 
-    const handleSubmit=(event)=>{
+    const handleSubmit=async(event)=>{
         event.preventDefault();
         if(formData.username===""||formData.password===""){
             setError("All fields required")
             return;
         }
+
+        try{
+            const res=await fetch('http://localhost:5000/api/login',{
+                method:'POST',
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify(formData)
+            })
+
+            const data=await res.json();
+            if(!res.ok){
+                setError(data.error);
+            }
+            console.log("Login Successful");
+            setFormData({username:"",password:""})
+        }catch(err){
+            setError('Server error');
+        }
+
+
     }
 
     return (

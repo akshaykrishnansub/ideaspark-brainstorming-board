@@ -30,7 +30,7 @@ const Signup = () => {
     }
 
     try{
-      const res=await fetch("http://localhost:5000/api/signup",{
+      const res=await fetch("http://localhost:5000/api/register",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify(formData)
@@ -63,7 +63,7 @@ const Signup = () => {
         <form className='space-y-4' onSubmit={handleSubmit}>
           <div>
             {success && (
-            <p className="text-green-600 text-center font-medium p-2 mt-4">
+            <p className="text-green-600 text-center font-medium p-2 mb-4">
               {success}
             </p>
             )}
