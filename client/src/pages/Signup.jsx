@@ -20,12 +20,36 @@ const Signup = () => {
     }))
   }
 
-  const handleSubmit=(event)=>{
+  const [success,setSuccess]=useState("")
+
+  const handleSubmit=async(event)=>{
     event.preventDefault();
-    if(formData.username===""||formData.password){
+    if(formData.username===""||formData.password===""){
       setError("All fields required");
       return;
     }
+
+    try{
+      const res=await fetch("http://localhost:5000/api/signup",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(formData)
+      });
+      
+      const data=await res.json();
+      if(!res.ok){
+        setError(data.error || 'Signup Failed')
+        return;
+      }
+      console.log("Token",data.token);
+      setSuccess("Registered successfully 🎉");
+      setFormData({ username: "", password: "" });
+      setError("");
+
+    }catch(err){
+      setError('Server error')
+    }
+    
   }
 
   return (
@@ -38,6 +62,11 @@ const Signup = () => {
         <p className='text-center p-2'>No credit card required</p>
         <form className='space-y-4' onSubmit={handleSubmit}>
           <div>
+            {success && (
+            <p className="text-green-600 text-center font-medium p-2 mt-4">
+              {success}
+            </p>
+            )}
             <label htmlFor="username" className='text-sm font-medium mb-0.5'>
               Username/Email
             </label>

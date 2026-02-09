@@ -27,7 +27,7 @@ function Navbar({
 
         {showSignup ? (
         <button className="bg-amber-600 px-3 py-2 rounded hover:bg-amber-800 text-white transition hover:cursor-pointer">
-          <Link to="/signup">
+          <Link to="/register">
           Sign Up for Free
           </Link>
         </button>

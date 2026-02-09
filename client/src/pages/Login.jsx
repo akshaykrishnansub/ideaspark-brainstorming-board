@@ -57,7 +57,7 @@ function Login(){
                 <div>
                     <button type="submit" className="w-full bg-amber-600 p-2 mt-4 text-white rounded hover:bg-amber-700 cursor-pointer transition">Login</button>
                 </div>
-                <p className="text-center p-2 text-sm">Dont have an account yet?{" "}<Link to="/signup" className="hover:text-amber-600">Signup</Link></p>
+                <p className="text-center p-2 text-sm">Dont have an account yet?{" "}<Link to="/register" className="hover:text-amber-600">Signup</Link></p>
                 </div>
             </form>
         </div>

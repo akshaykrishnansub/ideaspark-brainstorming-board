@@ -6,8 +6,8 @@ const findUserByMail=async(username)=>{
     return result.rows[0];
 }
 
-const createUser=async(username,password)=>{
-    const result=await db.query('INSERT into users (username,password) values($1,$2) returning *',[username,password]);
+const createUser=async(username,password_hash)=>{
+    const result=await db.query('INSERT into users (username,password_hash) values($1,$2) returning *',[username,password_hash]);
     return result.rows[0];
 }
 
