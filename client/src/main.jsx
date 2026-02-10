@@ -8,6 +8,8 @@ import Signup from './pages/Signup.jsx'
 import Home from './pages/Home.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Board from './pages/Board.jsx'
+import { AuthProvider } from './context/AuthContext.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 const router=createBrowserRouter([
   {
@@ -17,8 +19,17 @@ const router=createBrowserRouter([
       {path:"/",element:<Home/>},
       {path:"/login",element:<Login/>},
       {path:"/register",element:<Signup />},
-      {path:"/dashboard",element:<Dashboard />},
-      {path:"/boards",element:<Board />}
+      {path:"/dashboard",
+        element:(
+        <ProtectedRoute>
+        <Dashboard />
+        </ProtectedRoute>
+      )},
+      {path:"/boards",element:(
+      <ProtectedRoute>
+        <Board />
+      </ProtectedRoute>
+      )}
     ],
   },
 ]);
@@ -26,6 +37,8 @@ const router=createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 )

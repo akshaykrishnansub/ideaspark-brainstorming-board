@@ -1,6 +1,9 @@
 import Navbar from "../components/Navbar"
 import { Link } from "react-router-dom"
 import { useState } from "react"
+import { useContext } from "react"
+import { AuthContext } from "../context/AuthContext.jsx"
+import { useNavigate } from "react-router-dom"
 
 function Login(){
     const [formData,setFormData]=useState({
@@ -8,6 +11,8 @@ function Login(){
         password:""
     })
 
+    const {setIsAuth}=useContext(AuthContext)
+    const navigate=useNavigate();
     const [error,setError]=useState("")
 
     const handleChange=(event)=>{
@@ -29,15 +34,20 @@ function Login(){
             const res=await fetch('http://localhost:5000/api/login',{
                 method:'POST',
                 headers:{"Content-Type":"application/json"},
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
+                credentials:"include"
             })
 
             const data=await res.json();
             if(!res.ok){
                 setError(data.error);
+                return;
             }
             console.log("Login Successful");
             setFormData({username:"",password:""})
+            setIsAuth(true);
+            console.log("isAuth set to true");
+            navigate("/dashboard")
         }catch(err){
             setError('Server error');
         }
