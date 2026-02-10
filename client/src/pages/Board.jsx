@@ -1,7 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Navbar from '../components/Navbar'
+import { AuthContext } from '../context/AuthContext.jsx';
 
 const Board = () => {
+
+  const {logout}=useContext(AuthContext);
+
   const [showModal,setShowModal]=useState(false); //for board modal
   const [boardName,setBoardName]=useState('') // for board name input
   const [savedBoardName,setSavedBoardName]=useState('') //for saving the board's name
@@ -65,7 +69,7 @@ const Board = () => {
     rightSlot={
       <>
       <button className='bg-green-600 p-2 rounded'>Save Board</button>
-      <button className='bg-amber-600 p-2 rounded'>Logout</button>
+      <button className='bg-amber-600 p-2 rounded'onClick={logout}>Logout</button>
       </>
     }
     />

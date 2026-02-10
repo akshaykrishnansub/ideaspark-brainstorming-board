@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Navbar from '../components/Navbar'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../../src/context/AuthContext.jsx'
 
 const Dashboard = () => {
+
+  const {logout}=useContext(AuthContext)
   return (
     <>
     <title>IdeaSpark | Dashboard</title>
@@ -10,7 +13,7 @@ const Dashboard = () => {
     showLogin={false}
     showSignup={false}
     rightSlot={
-    <button className='bg-amber-600 p-2 rounded hover:bg-amber-700 transition-colors'>Logout</button>
+    <button className='bg-amber-600 p-2 rounded hover:bg-amber-700 transition-colors' onClick={logout}>Logout</button>
     }/>
     <div className="flex">
       <aside className='bg-blue-950 w-64 h-screen justify-center px-2 min-h-screen'>

@@ -57,4 +57,21 @@ const login=async(req,res)=>{
     }
 }
 
-export {registerUser,login}
+const logout=(req,res)=>{
+    try{
+        //if your JWT is stored in cookies
+        res.clearCookie('token',{
+            path:"/",
+            httpOnly:true,
+            secure:true
+        })
+        res.json({message:'Logged out successfully'});
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({error:'Server error during logout'})
+    }
+}
+
+
+
+export {registerUser,login,logout}

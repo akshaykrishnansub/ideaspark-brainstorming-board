@@ -21,9 +21,18 @@ const AuthProvider=({children})=>{
         .finally(()=>setLoading(false));
     },[]);
 
+    const logout=async()=>{
+        await fetch('http://localhost:5000/api/logout',{
+            method:'POST',
+            credentials:'include'
+        });
+        setIsAuth(false);
+    }
+
+
     return(
         //provide the context value
-        <AuthContext.Provider value={{isAuth,setIsAuth,loading}}>
+        <AuthContext.Provider value={{isAuth,logout,setIsAuth,loading}}>
             {children}
         </AuthContext.Provider>
     )
