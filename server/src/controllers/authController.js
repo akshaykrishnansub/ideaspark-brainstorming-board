@@ -63,7 +63,7 @@ const logout=(req,res)=>{
         res.clearCookie('token',{
             path:"/",
             httpOnly:true,
-            secure:true
+            secure:false
         })
         res.json({message:'Logged out successfully'});
     }catch(err){
