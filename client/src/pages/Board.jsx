@@ -57,20 +57,43 @@ const Board = () => {
   }
 }
 
-  const handleSaveCategoryName=()=>{
+  const handleSaveCategoryName=async()=>{
     if(!categoryName.trim()){
       return;
     }
 
-    const newCategory={
-      id:Date.now(), //temporary frontend ID
-      name:categoryName,
+    if(!boardId){
+      alert('Please create a board first');
+      return;
+    }
+
+    try{
+      const res=await fetch("http://localhost:5000/api/categories",{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        credentials:"include",
+        body:JSON.stringify({board_id:boardId,name:categoryName})
+      })
+
+      const data=await res.json();
+      if(!res.ok){
+        console.error(data.error)
+        return;
+      }
+
+      const newCategory={
+      id:data.category.id, //temporary frontend ID
+      name:data.category.name,
       cards:[] //array for storing cards
     }
 
     setShowCategoryModal(false); //close the category modal
     setCategoryName(''); // clear the category name
     setSavedCategoryName(prev=>[...prev,newCategory]); // set the category name
+
+    }catch(err){
+      console.error("Error creating category",err)
+    }
   }
 
   const handleAddCard=(categoryId)=>{
@@ -107,7 +130,13 @@ const Board = () => {
       <aside className='w-64 bg-blue-950 min-h-screen'>
       <div className='text-white pt-4 px-2 font-bold text-2xl hover:text-amber-600 cursor-pointer' onClick={()=>setShowModal(true)}>Name of the Board</div>
       <div className='text-white font-bold pt-4 px-2 text-2xl'>Category<br/>----------------------</div>
-      <div className='text-white px-2 hover:text-amber-600 cursor-pointer' onClick={()=>setShowCategoryModal(true)}>Add a Category</div>
+      <div className='text-white px-2 hover:text-amber-600 cursor-pointer' 
+      onClick={()=>{
+        if(!boardId){
+          alert("Please save the board first");
+          return;
+        }
+      setShowCategoryModal(true)}}>Add a Category</div>
       <div className='px-2 pt-6 font-extrabold text-white text-3xl'>Invite Members to the board</div>
       </aside>
       <main className='flex-1 bg-blue-900 h-14 text-2xl text-center p-2 text-white font-extrabold'>
@@ -171,7 +200,7 @@ const Board = () => {
     <div className='bg-black/55 backdrop-blur-sm fixed inset-0 flex justify-center items-center'>
       <div className='bg-white w-96 p-6 text-center'>
         <label htmlFor="categoryName" className='font-bold'>Add your Category Here:</label>
-        <input type="text" className='w-full p-2 rounded mt-4 border' value={categoryName} onChange={(e)=>{setCategoryName(e.target.value)}} />
+        <input type="text" className='w-full p-2 rounded mt-4 border' name='name' value={categoryName} onChange={(e)=>{setCategoryName(e.target.value)}} />
         <div className='flex gap-4 justify-center'>
           <button className='bg-blue-500 p-2 mt-4 rounded' onClick={handleSaveCategoryName}>Add Category</button>
           <button className='bg-red-500 p-2 mt-4 rounded' onClick={()=>setShowCategoryModal(false)}>Cancel</button>

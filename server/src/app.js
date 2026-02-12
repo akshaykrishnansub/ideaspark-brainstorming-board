@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url'
 import './config/db.js'
 import authRoutes from './routes/authRoutes.js'
 import boardRoutes from './routes/boardRoutes.js'
+import categoryRoutes from './routes/categoryRoutes.js'
 import cookieParser from 'cookie-parser'
 
 
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname,'../../client/dist')));
 
 app.use('/api',authRoutes)
 app.use('/api/boards',boardRoutes)
+app.use('/api/categories',categoryRoutes)
 
 //catch all routes for React
 app.get(/.*/,(req,res)=>{
