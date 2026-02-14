@@ -1,4 +1,4 @@
-import Router from 'express'
+import {Router} from 'express'
 import authenticateToken from '../middleware/authMiddleware.js';
 import { createBoard } from '../controllers/boardController.js';
 

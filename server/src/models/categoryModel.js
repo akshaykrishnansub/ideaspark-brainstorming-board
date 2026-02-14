@@ -5,4 +5,9 @@ const insertCategory=async(board_id,name)=>{
     return result.rows[0];
 }
 
-export default insertCategory
+const findCategoryByIdAndBoardId=async(id,board_id)=>{
+    const result=await db.query('SELECT * from categories where id=$1 and board_id=$2',[id,board_id]);
+    return result.rows[0]
+}
+
+export {insertCategory,findCategoryByIdAndBoardId}

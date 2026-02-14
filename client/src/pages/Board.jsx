@@ -96,22 +96,50 @@ const Board = () => {
     }
   }
 
-  const handleAddCard=(categoryId)=>{
+  const handleAddCard=async(categoryId)=>{
     if(!cardInput.trim()){
       return;
     }
-    setSavedCategoryName(prev=>
+
+    try{
+      const res=await fetch("http://localhost:5000/api/cards",{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        credentials:"include",
+        body:JSON.stringify({
+          board_id:boardId,
+          category_id:categoryId,
+          content:cardInput
+        })
+      })
+      const data=await res.json();
+      if(!res.ok){
+        console.error(data.error);
+        return;
+      }
+
+      const newCard={
+        id:data.card.id,
+        content:data.card.content,
+        position:data.card.position
+      }
+
+      setSavedCategoryName(prev=>
       prev.map(category=>
         category.id===categoryId
         ?{
           ...category,
-          cards:[...category.cards,cardInput]
+          cards:[...category.cards,newCard]
         }
         : category
       ),
       setCardInput(''),
       setActiveCategoryId(null)
     )
+
+    }catch(err){
+      console.error("Error creating card",err)
+    }
   }
 
   return (
@@ -158,9 +186,9 @@ const Board = () => {
                 <h3 className='text-3xl font-extrabold'>{category.name}</h3>
 
                 <div className='mt-4 space-y-2'>
-                  {category.cards.map((card,index)=>(
-                    <div key={index} className='bg-blue-300 border p-2 font-normal'>
-                      {card}
+                  {category.cards.map(card=>(
+                    <div key={card.id} className='bg-blue-300 border p-2 font-normal'>
+                      {card.content}
                     </div>
                   ))}
                 </div>

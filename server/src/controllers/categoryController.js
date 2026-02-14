@@ -1,4 +1,4 @@
-import insertCategory from "../models/categoryModel.js";
+import {insertCategory} from "../models/categoryModel.js";
 import { findBoardByBoardIdAndOwnerId } from "../models/boardModel.js";
 
 const createCategory=async(req,res)=>{
