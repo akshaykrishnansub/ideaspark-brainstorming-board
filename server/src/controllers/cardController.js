@@ -5,7 +5,8 @@ import { findCategoryByIdAndBoardId } from "../models/categoryModel.js";
 const createCard=async(req,res)=>{
     try{
         const owner_id=req.user.id;
-        const {board_id,category_id,content}=req.body;
+        const board_id=req.params.board_id;
+        const {category_id,content}=req.body;
 
         //Basic validation
         if(!board_id||!category_id||!content){

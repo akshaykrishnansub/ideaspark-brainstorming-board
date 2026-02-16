@@ -113,12 +113,11 @@ const Board = () => {
     }
 
     try{
-      const res=await fetch("http://localhost:5000/api/cards",{
+      const res=await fetch(`http://localhost:5000/api/boards/${boardId}/cards`,{
         method:"POST",
         headers:{'Content-Type':'application/json'},
         credentials:"include",
         body:JSON.stringify({
-          board_id:boardId,
           category_id:categoryId,
           content:cardInput
         })
