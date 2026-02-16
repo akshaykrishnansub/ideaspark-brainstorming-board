@@ -29,6 +29,11 @@ const router=createBrowserRouter([
       <ProtectedRoute>
         <Board />
       </ProtectedRoute>
+      )},
+      {path:"/boards/:id",element:(
+        <ProtectedRoute>
+          <Board />
+        </ProtectedRoute>
       )}
     ],
   },

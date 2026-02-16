@@ -1,10 +1,19 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState,useEffect } from 'react'
+import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar'
 import { AuthContext } from '../context/AuthContext.jsx';
 
 const Board = () => {
 
   const {logout}=useContext(AuthContext);
+
+  const {id}=useParams();
+
+  useEffect(()=>{
+    if(id){
+      fetchBoardData(id);
+    }
+  },[id])
   
   const [boardSaveSuccess,setBoardSaveSuccess]=useState(''); //success message for board save
   const[boardId,setBoardId]=useState(null); //Initial state of board ID
@@ -57,6 +66,7 @@ const Board = () => {
   }
 }
 
+//Code to Save Categories or Add Categories
   const handleSaveCategoryName=async()=>{
     if(!categoryName.trim()){
       return;
@@ -96,6 +106,7 @@ const Board = () => {
     }
   }
 
+  //function to Add Card
   const handleAddCard=async(categoryId)=>{
     if(!cardInput.trim()){
       return;
@@ -142,6 +153,29 @@ const Board = () => {
     }
   }
 
+  //code to fetch board data
+  const fetchBoardData=async(boardId)=>{
+    try{
+      const res=await fetch(`http://localhost:5000/api/boards/${boardId}`,{
+        method:'GET',
+        credentials:'include'
+      })
+      const data=await res.json();
+      if(!res.ok){
+        console.error(data.error);
+        return;
+      }
+      //setting the board title
+      setSavedBoardName(data.board.title);
+      setBoardId(data.board.id);
+
+      //setting the categories with cards
+      setSavedCategoryName(data.categories)
+    }catch(err){
+      console.error('Error loading boards',err);
+    }
+  }
+
   return (
     <>
     <title>IdeaSpark | Boards</title>
@@ -154,8 +188,8 @@ const Board = () => {
       </>
     }
     />
-  <div className='flex'>
-      <aside className='w-64 bg-blue-950 min-h-screen'>
+  <div className='flex min-h-screen'>
+      <aside className='w-64 bg-blue-950'>
       <div className='text-white pt-4 px-2 font-bold text-2xl hover:text-amber-600 cursor-pointer' onClick={()=>setShowModal(true)}>Name of the Board</div>
       <div className='text-white font-bold pt-4 px-2 text-2xl'>Category<br/>----------------------</div>
       <div className='text-white px-2 hover:text-amber-600 cursor-pointer' 
@@ -167,8 +201,10 @@ const Board = () => {
       setShowCategoryModal(true)}}>Add a Category</div>
       <div className='px-2 pt-6 font-extrabold text-white text-3xl'>Invite Members to the board</div>
       </aside>
-      <main className='flex-1 bg-blue-900 h-14 text-2xl text-center p-2 text-white font-extrabold'>
-        {savedBoardName || 'No board created yet'}
+      <main className='flex-1 text-2xl text-center font-extrabold'>
+        <div className='h-14 bg-amber-800 p-3 text-white'>
+          {savedBoardName || 'No board created yet'}
+        </div>
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
           {boardSaveSuccess &&(
           <div className='bg-green-400 text-white text-sm mb-4 inline-block'>
