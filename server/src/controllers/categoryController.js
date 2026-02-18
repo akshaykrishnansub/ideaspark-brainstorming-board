@@ -1,6 +1,6 @@
 import {deleteCategoryById, findCategoryById, insertCategory} from "../models/categoryModel.js";
 import { findBoardByBoardIdAndOwnerId } from "../models/boardModel.js";
-import { deleteCardsByCategoryId,deleteCategoryById } from "../models/cardModel.js";
+import { deleteCardsByCategoryId } from "../models/cardModel.js";
 
 const createCategory=async(req,res)=>{
     try{

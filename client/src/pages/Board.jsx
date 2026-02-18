@@ -175,6 +175,64 @@ const Board = () => {
     }
   }
 
+  const handleCardDeletion=async(cardId,categoryId)=>{
+    const confirmDelete=window.confirm("Are you sure you want to delete this card?");
+    if(!confirmDelete){
+      return;
+    }
+    try{
+      const res=await fetch(`http://localhost:5000/api/cards/${cardId}`,{
+        method:"DELETE",
+        credentials:"include"
+      }
+      )
+      const data=await res.json();
+      if(!res.ok){
+        console.error(data.error);
+        return;
+      }
+
+      //update the nested state
+      setSavedCategoryName(prev=>
+        prev.map(category=>
+          category.id===categoryId
+          ?{
+            ...category,
+            cards:category.cards.filter(card=>card.id!==cardId)
+          }
+          :category
+        )
+      )
+    }catch(err){
+      console.error("Error deleting card",err);
+    }
+  }
+
+  const handleCategoryDeletion=async(categoryId)=>{
+    const deleteConfirmation=window.confirm("Are you sure that you want to delete this category?");
+    if(!deleteConfirmation){
+      return;
+    }
+    try{
+      const res=await fetch(`http://localhost:5000/api/categories/${categoryId}`,{
+      method:'DELETE',
+      credentials:"include"
+    })
+    const data=await res.json();
+    if(!res.ok){
+      console.error(data.error);
+      return;
+    }
+
+    //Remove entire category from the state
+    setSavedCategoryName(prev=>
+      prev.filter(category=>category.id!==categoryId)
+    );
+    }catch(err){
+      console.error('Error deleting category',err);
+    }
+  }
+
   return (
     <>
     <title>IdeaSpark | Boards</title>
@@ -216,14 +274,17 @@ const Board = () => {
             savedCategoryName.map(category=>(
               <div
               key={category.id}
-              className='bg-blue-500 text-white px-6 py-4 rounded shadow-lg w-96'
+              className='bg-blue-500 text-white px-6 py-4 rounded shadow-lg w-96 border hover:border-amber-600'
               >
-                <h3 className='text-3xl font-extrabold'>{category.name}</h3>
-
+                <div className='flex justify-between items-center'>
+                  <h3 className='text-3xl font-extrabold'>{category.name}</h3>
+                  <button className='text-red-600 font-bold cursor-pointer' title='Delete This Category' onClick={()=>handleCategoryDeletion(category.id)}>X</button>
+                </div>
                 <div className='mt-4 space-y-2'>
                   {category.cards.map(card=>(
-                    <div key={card.id} className='bg-blue-300 border p-2 font-normal'>
+                    <div key={card.id} className='bg-blue-300 border p-2 font-normal flex justify-between items-center'>
                       {card.content}
+                      <button className='font-bold cursor-pointer' title='Delete This Card' onClick={()=>handleCardDeletion(card.id,category.id)}>🗑</button>
                     </div>
                   ))}
                 </div>
