@@ -1,5 +1,6 @@
-import {insertCategory} from "../models/categoryModel.js";
+import {deleteCategoryById, findCategoryById, insertCategory} from "../models/categoryModel.js";
 import { findBoardByBoardIdAndOwnerId } from "../models/boardModel.js";
+import { deleteCardsByCategoryId,deleteCategoryById } from "../models/cardModel.js";
 
 const createCategory=async(req,res)=>{
     try{
@@ -31,4 +32,32 @@ const createCategory=async(req,res)=>{
     }
 }
 
-export {createCategory}
+const deleteCategory=async(req,res)=>{
+    try{
+        const owner_id=req.user.id;
+        const category_id=req.params.id;
+
+        const category=await findCategoryById(category_id);
+        if(!category){
+            return res.status(404).json({error:'Category not found'});
+        }
+
+        const board=await findBoardByBoardIdAndOwnerId(category.board_id,owner_id);
+        if(!board){
+            return res.status(403).json({error:'Unauthorised'});
+        }
+
+        //Delete cards inside a category
+        await deleteCardsByCategoryId(category_id);
+
+        //Delete Category
+        await deleteCategoryById(category_id);
+        res.json({message:'Category deleted successfully'});
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({error:'Error deleting category'})
+    }
+}
+
+export {createCategory,deleteCategory}

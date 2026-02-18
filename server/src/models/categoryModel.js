@@ -15,4 +15,22 @@ const findCategoryByIdAndBoardId=async(id,board_id)=>{
     return result.rows[0]
 }
 
-export {insertCategory,findCategoryByIdAndBoardId,findCategoriesByBoardId}
+//find category by ID
+const findCategoryById=async(category_id)=>{
+    const result=await db.query('SELECT * from categories where id=$1',[category_id]);
+    return result.rows[0];
+}
+
+//delete category by ID
+const deleteCategoryById=async(category_id)=>{
+    const result=await db.query('DELETE from categories where id=$1 returning *',[category_id]);
+    return result.rows[0]
+}
+
+//delete category by board ID
+const deleteCategoryByBoardId=async(board_id)=>{
+    const result=await db.query('DELETE from categories where board_id=$1 returning *',[board_id]);
+    return result.rows
+}
+
+export {insertCategory,findCategoryByIdAndBoardId,findCategoriesByBoardId,findCategoryById,deleteCategoryById,deleteCategoryByBoardId}

@@ -15,4 +15,9 @@ const insertBoard=async(owner_id,title)=>{
     return result.rows[0];
 }
 
-export {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId}
+const deleteBoardById=async(board_id)=>{
+    const result=await db.query('DELETE from boards where id=$1 returning *',[board_id])
+    return result.rows[0];
+}
+
+export {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId,deleteBoardById}

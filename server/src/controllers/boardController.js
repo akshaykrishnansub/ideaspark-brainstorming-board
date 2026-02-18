@@ -1,6 +1,6 @@
-import {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId} from "../models/boardModel.js";
-import { findCategoriesByBoardId } from "../models/categoryModel.js";
-import { findCardsByCategoryId } from "../models/cardModel.js";
+import {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId, deleteBoardById} from "../models/boardModel.js";
+import { deleteCategoryByBoardId, findCategoriesByBoardId } from "../models/categoryModel.js";
+import { deleteCardsByBoardId, findCardsByCategoryId } from "../models/cardModel.js";
 
 const createBoard=async(req,res)=>{
     try{
@@ -45,4 +45,29 @@ const getBoardById=async(req,res)=>{
     }
 }
 
-export {createBoard,getBoards,getBoardById}
+const deleteBoard=async(req,res)=>{
+    try{
+        const owner_id=req.user.id;
+        const board_id=req.params.id;
+
+        const board=await findBoardByBoardIdAndOwnerId(board_id,owner_id);
+        if(!board){
+            return res.status(403).json({error:'Unauthorised'})
+        }
+
+        //Delete card first
+        await deleteCardsByBoardId(board_id);
+
+        //Delete category
+        await deleteCategoryByBoardId(board_id);
+
+        //Delete Board
+        await deleteBoardById(board_id);
+        res.json({message:'Board Deleted successfully'})
+    }catch(err){
+        console.error(err);
+        res.status(500).json({error:'Error deleting board'});
+    }
+}
+
+export {createBoard,getBoards,getBoardById,deleteBoard}

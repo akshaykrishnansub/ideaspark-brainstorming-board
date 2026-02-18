@@ -1,4 +1,4 @@
-import { insertCard,calculateMaxPositionByCategory } from "../models/cardModel.js";
+import { insertCard,calculateMaxPositionByCategory, findCardById, deleteCardById } from "../models/cardModel.js";
 import { findBoardByBoardIdAndOwnerId } from "../models/boardModel.js";
 import { findCategoryByIdAndBoardId } from "../models/categoryModel.js";
 
@@ -40,4 +40,25 @@ const createCard=async(req,res)=>{
     }
 }
 
-export {createCard}
+const deleteCard=async(req,res)=>{
+    try{
+        const owner_id=req.user.id;
+        const card_id=req.params.id;
+        //finding the card by id
+        const card=await findCardById(card_id);
+        if(!card){
+            return res.status(404).json({error:'Card not found'})
+        }
+        const board=await findBoardByBoardIdAndOwnerId(card.board_id,owner_id);
+        if(!board){
+            return res.status(403).json({error:'Unauthorized'});
+        }
+        await deleteCardById(card_id);
+        res.json({message:'Card deleted successfully'});
+    }catch(err){
+        console.error(err);
+        res.status(500).json({error:'Card not found'})
+    }
+}
+
+export {createCard,deleteCard}
