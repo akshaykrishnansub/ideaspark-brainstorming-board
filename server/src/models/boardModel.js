@@ -20,4 +20,6 @@ const deleteBoardById=async(board_id)=>{
     return result.rows[0];
 }
 
+
+
 export {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId,deleteBoardById}

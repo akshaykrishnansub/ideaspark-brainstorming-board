@@ -1,4 +1,4 @@
-import { insertCard,calculateMaxPositionByCategory, findCardById, deleteCardById } from "../models/cardModel.js";
+import { insertCard,calculateMaxPositionByCategory, findCardById, deleteCardById, updateCardById } from "../models/cardModel.js";
 import { findBoardByBoardIdAndOwnerId } from "../models/boardModel.js";
 import { findCategoryByIdAndBoardId } from "../models/categoryModel.js";
 
@@ -61,4 +61,32 @@ const deleteCard=async(req,res)=>{
     }
 }
 
-export {createCard,deleteCard}
+const updateCard=async(req,res)=>{
+    try{
+        const owner_id=req.user.id;
+        const card_id=req.params.id;
+        const {content}=req.body;
+        if(!content.trim()){
+            return res.status(400).json({error:'Content is required'});
+        }
+
+        const card=await findCardById(card_id);
+        if(!card){
+            return res.status(404).json({error:'Card not found'});
+        }
+
+        const board=await findBoardByBoardIdAndOwnerId(card.board_id,owner_id);
+        if(!board){
+            return res.status(403).json({error:'Unauthorized'});
+        }
+
+        const updateCard=await updateCardById(card_id,content);
+        res.json({message:'Card updated successfully',card:updateCard});
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({error:'Error while updating card'});
+    }
+}
+
+export {createCard,deleteCard,updateCard}

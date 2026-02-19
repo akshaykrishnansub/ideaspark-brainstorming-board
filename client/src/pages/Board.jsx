@@ -28,6 +28,8 @@ const Board = () => {
   const [activeCategoryId,setActiveCategoryId]=useState(null); //current category id
   const [cardInput,setCardInput]=useState(''); //Card Input initial state
 
+  const [editingCardId,setEditingCardId]=useState(null); //initial state for edit card id
+  const [editCardContent,setEditCardContent]=useState(""); // initial state for edit card content
 
   const handleSaveBoardName=async()=>{
     if(!boardName.trim()){
@@ -233,6 +235,41 @@ const Board = () => {
     }
   }
 
+  const handleCardUpdate=async(cardId,categoryId)=>{
+    if(!editCardContent.trim()){
+      return;
+    }
+    try{
+      const res=await fetch(`http://localhost:5000/api/cards/${cardId}`,{
+        method:'PUT',
+        credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({content:editCardContent})
+      })
+
+      const data=await res.json();
+      if(!res.ok){
+        console.error(data.error);
+        return;
+      }
+      setSavedCategoryName(prev=>
+        prev.map(category=>
+          category.id===categoryId?{
+            ...category,
+            cards:category.cards.map(card=>
+              card.id===cardId?{...card,content:editCardContent}:
+              card
+            )
+          }
+          :category
+        )
+      )
+      setEditingCardId(null);
+    }catch(err){
+      console.error('Error while updating cards',err);
+    }
+  }
+
   return (
     <>
     <title>IdeaSpark | Boards</title>
@@ -245,7 +282,7 @@ const Board = () => {
       </>
     }
     />
-  <div className='flex min-h-screen'>
+    <div className='flex min-h-screen'>
       <aside className='w-64 bg-blue-950'>
       <div className='text-white pt-4 px-2 font-bold text-2xl hover:text-amber-600 cursor-pointer' onClick={()=>setShowModal(true)}>Name of the Board</div>
       <div className='text-white font-bold pt-4 px-2 text-2xl'>Category<br/>----------------------</div>
@@ -262,7 +299,7 @@ const Board = () => {
         <div className='h-14 bg-amber-800 p-3 text-white'>
           {savedBoardName || 'No board created yet'}
         </div>
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 items-start">
           {boardSaveSuccess &&(
           <div className='bg-green-400 text-white text-sm mb-4 inline-block'>
             {boardSaveSuccess}
@@ -283,8 +320,25 @@ const Board = () => {
                 <div className='mt-4 space-y-2'>
                   {category.cards.map(card=>(
                     <div key={card.id} className='bg-blue-300 border p-2 font-normal flex justify-between items-center'>
-                      {card.content}
-                      <button className='font-bold cursor-pointer' title='Delete This Card' onClick={()=>handleCardDeletion(card.id,category.id)}>🗑</button>
+                      {editingCardId===card.id?(
+                       <>
+                       <div>
+                        <textarea className='text-black bg-white p-1 w-80' value={editCardContent} onChange={(e)=>setEditCardContent(e.target.value)}/>
+                          <div className='flex gap-3 mt-3'>
+                            <button className='bg-green-800 p-2 rounded-lg'onClick={()=>handleCardUpdate(card.id,category.id)}>Save Changes</button>
+                            <button className='bg-red-700 p-2 rounded-lg' onClick={()=>{setEditingCardId(null);setEditCardContent("");}}>Cancel</button>
+                          </div>
+                       </div>
+                       </> 
+                      ):(
+                        <div className='flex justify-between w-full'>
+                          {card.content}
+                          <div>
+                            <button className='cursor-pointer' onClick={()=>{setEditingCardId(card.id);setEditCardContent(card.content)}}>✏️</button>
+                            <button className='font-bold cursor-pointer' title='Delete This Card' onClick={()=>handleCardDeletion(card.id,category.id)}>🗑</button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

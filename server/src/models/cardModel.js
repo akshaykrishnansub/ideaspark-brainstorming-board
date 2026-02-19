@@ -39,4 +39,10 @@ const deleteCardsByBoardId=async(board_id)=>{
     return result.rows
 }
 
-export {insertCard,calculateMaxPositionByCategory,findCardsByCategoryId,findCardById,deleteCardById,deleteCardsByBoardId,deleteCardsByCategoryId}
+//Update card by ID
+const updateCardById=async(card_id,content)=>{
+    const result=await db.query('UPDATE cards SET content=$1 WHERE id=$2 RETURNING *',[content,card_id]);
+    return result.rows[0];
+}
+
+export {insertCard,calculateMaxPositionByCategory,findCardsByCategoryId,findCardById,deleteCardById,deleteCardsByBoardId,deleteCardsByCategoryId,updateCardById}
