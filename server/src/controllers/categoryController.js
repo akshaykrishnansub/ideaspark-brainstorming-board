@@ -1,4 +1,4 @@
-import {deleteCategoryById, findCategoryById, insertCategory} from "../models/categoryModel.js";
+import {deleteCategoryById, findCategoryById, insertCategory, updateCategoryById} from "../models/categoryModel.js";
 import { findBoardByBoardIdAndOwnerId } from "../models/boardModel.js";
 import { deleteCardsByCategoryId } from "../models/cardModel.js";
 
@@ -60,4 +60,37 @@ const deleteCategory=async(req,res)=>{
     }
 }
 
-export {createCategory,deleteCategory}
+const updateCategory=async(req,res)=>{
+    try{
+        const owner_id=req.user.id;
+        const category_id=req.params.id;
+        const {name}=req.body;
+        if(!name.trim()){
+            return res.status(400).json({error:'Category name is required'});
+        }
+
+        const category=await findCategoryById(category_id);
+        if(!category){
+            return res.status(404).json({error:'Category not found'})
+        }
+
+        const board=await findBoardByBoardIdAndOwnerId(category.board_id,owner_id);
+        if(!board){
+            return res.status(403).json({error:'Unauthorized'});
+        }
+
+        const updatedCategory=await updateCategoryById(category_id,name);
+        res.json({
+            message:'Category updated successfully',
+            category:updatedCategory
+        })
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({error:'Error while updating category'});
+    }
+
+
+}
+
+export {createCategory,deleteCategory,updateCategory}

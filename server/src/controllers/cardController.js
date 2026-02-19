@@ -80,8 +80,8 @@ const updateCard=async(req,res)=>{
             return res.status(403).json({error:'Unauthorized'});
         }
 
-        const updateCard=await updateCardById(card_id,content);
-        res.json({message:'Card updated successfully',card:updateCard});
+        const updatedCard=await updateCardById(card_id,content);
+        res.json({message:'Card updated successfully',card:updatedCard});
 
     }catch(err){
         console.error(err);

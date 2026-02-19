@@ -31,6 +31,10 @@ const Board = () => {
   const [editingCardId,setEditingCardId]=useState(null); //initial state for edit card id
   const [editCardContent,setEditCardContent]=useState(""); // initial state for edit card content
 
+  const [editingCategoryId,setEditCategoryId]=useState(null); //initial state for edit category id
+  const [editCategoryName,setEditCategoryName]=useState(""); //initial state for edit categoryName
+
+
   const handleSaveBoardName=async()=>{
     if(!boardName.trim()){
       return;
