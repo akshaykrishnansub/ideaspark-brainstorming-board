@@ -35,7 +35,7 @@ const deleteCategoryByBoardId=async(board_id)=>{
 
 //Update category
 const updateCategoryById=async(category_id,name)=>{
-    const result=await db.query('UPDATE from categories SET name=$1 WHERE id=$2 returning *',[name,category_id]);
+    const result=await db.query('UPDATE categories SET name=$1 WHERE id=$2 returning *',[name,category_id]);
     return result.rows[0];
 }
 

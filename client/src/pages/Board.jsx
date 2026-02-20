@@ -31,7 +31,7 @@ const Board = () => {
   const [editingCardId,setEditingCardId]=useState(null); //initial state for edit card id
   const [editCardContent,setEditCardContent]=useState(""); // initial state for edit card content
 
-  const [editingCategoryId,setEditCategoryId]=useState(null); //initial state for edit category id
+  const [editingCategoryId,setEditingCategoryId]=useState(null); //initial state for edit category id
   const [editCategoryName,setEditCategoryName]=useState(""); //initial state for edit categoryName
 
 
@@ -274,6 +274,39 @@ const Board = () => {
     }
   }
 
+  const handleCategoryUpdate=async(categoryId)=>{
+    if(!editCategoryName.trim()){
+      return;
+    }
+    try{
+      const res=await fetch(`http://localhost:5000/api/categories/${categoryId}`,{
+        method:'PUT',
+        credentials:"include",
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({name:editCategoryName})
+      })
+
+      const data=await res.json();
+      if(!res.ok){
+        console.error(data.error);
+        return;
+      }
+
+      //Update the state
+      setSavedCategoryName(prev=>
+        prev.map(category=>
+          category.id===categoryId?{...category,name:editCategoryName}:
+          category
+        )
+      )
+      setEditingCategoryId(null);
+      setEditCategoryName("");
+
+    }catch(err){
+      console.error('Error in updating category',err);
+    }
+  }
+
   return (
     <>
     <title>IdeaSpark | Boards</title>
@@ -318,8 +351,23 @@ const Board = () => {
               className='bg-blue-500 text-white px-6 py-4 rounded shadow-lg w-96 border hover:border-amber-600'
               >
                 <div className='flex justify-between items-center'>
-                  <h3 className='text-3xl font-extrabold'>{category.name}</h3>
-                  <button className='text-red-600 font-bold cursor-pointer' title='Delete This Category' onClick={()=>handleCategoryDeletion(category.id)}>X</button>
+                {editingCategoryId===category.id?(
+                  <div>
+                    <textarea className='bg-white text-black' value={editCategoryName} onChange={(e)=>{setEditCategoryName(e.target.value)}} />
+                    <div className='flex gap-3 mt-3'>
+                      <button className='bg-green-500 font-normal p-1' onClick={()=>handleCategoryUpdate(category.id)}>Save Changes</button>
+                      <button className='bg-red-600 font-normal p-1' onClick={()=>{setEditingCategoryId(null);setEditCategoryName("")}}>Cancel</button>
+                    </div>
+                  </div>
+                ):(
+                  <div className='flex justify-between w-full'>
+                    <h3 className='text-3xl font-extrabold'>{category.name}</h3>
+                    <div>
+                      <button className='cursor-pointer' title='Edit this Category' onClick={()=>{setEditingCategoryId(category.id);setEditCategoryName(category.name)}}>✏️</button>
+                      <button className='text-red-600 font-bold cursor-pointer' title='Delete This Category' onClick={()=>handleCategoryDeletion(category.id)}>X</button>
+                    </div>
+                  </div>
+                )}
                 </div>
                 <div className='mt-4 space-y-2'>
                   {category.cards.map(card=>(
@@ -338,7 +386,7 @@ const Board = () => {
                         <div className='flex justify-between w-full'>
                           {card.content}
                           <div>
-                            <button className='cursor-pointer' onClick={()=>{setEditingCardId(card.id);setEditCardContent(card.content)}}>✏️</button>
+                            <button className='cursor-pointer' title='Edit this Card' onClick={()=>{setEditingCardId(card.id);setEditCardContent(card.content)}}>✏️</button>
                             <button className='font-bold cursor-pointer' title='Delete This Card' onClick={()=>handleCardDeletion(card.id,category.id)}>🗑</button>
                           </div>
                         </div>
