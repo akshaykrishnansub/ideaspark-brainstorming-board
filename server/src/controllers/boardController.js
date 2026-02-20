@@ -1,4 +1,4 @@
-import {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId, deleteBoardById} from "../models/boardModel.js";
+import {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId, deleteBoardById, updateBoardById} from "../models/boardModel.js";
 import { deleteCategoryByBoardId, findCategoriesByBoardId } from "../models/categoryModel.js";
 import { deleteCardsByBoardId, findCardsByCategoryId } from "../models/cardModel.js";
 
@@ -70,4 +70,28 @@ const deleteBoard=async(req,res)=>{
     }
 }
 
-export {createBoard,getBoards,getBoardById,deleteBoard}
+const updateBoard=async(req,res)=>{
+    try{
+        const owner_id=req.user.id;
+        const board_id=req.params.id;
+        const {title}=req.body;
+
+        if(!title.trim()){
+            return res.status(400).json({error:'Board title required'});
+        }
+
+        const updatedBoard=await updateBoardById(board_id,owner_id,title);
+
+        if(!updatedBoard){
+            return res.status(403).json({error:'Unauthorized or Board not found'})
+        }
+
+        res.json({message:'Board Updated successfully',board:updatedBoard});
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({error:'Error Updating Board'})
+    }
+}
+
+export {createBoard,getBoards,getBoardById,deleteBoard,updateBoard}

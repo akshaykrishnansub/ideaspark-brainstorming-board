@@ -20,6 +20,9 @@ const deleteBoardById=async(board_id)=>{
     return result.rows[0];
 }
 
+const updateBoardById=async(board_id,title,owner_id)=>{
+    const result=await db.query('UPDATE boards SET title=$1 WHERE id=$2 and owner_id=$3 returning *',[title,board_id,owner_id]);
+    return result.rows[0]
+}
 
-
-export {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId,deleteBoardById}
+export {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId,deleteBoardById,updateBoardById}

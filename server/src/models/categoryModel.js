@@ -1,7 +1,7 @@
 import db from '../config/db.js'
 
 const findCategoriesByBoardId=async(board_id)=>{
-    const result=await db.query('SELECT * from categories where board_id=$1',[board_id]);
+    const result=await db.query('SELECT * from categories where board_id=$1 order by id ASC',[board_id]);
     return result.rows
 }
 

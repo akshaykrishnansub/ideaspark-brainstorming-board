@@ -68,13 +68,13 @@ const Dashboard = () => {
     rightSlot={
     <button className='bg-amber-600 p-2 rounded hover:bg-amber-700 transition-colors' onClick={logout}>Logout</button>
     }/>
-    <div className="flex min-h-screen">
-      <aside className='bg-blue-950 w-64 justify-center px-2'>
-        <div className='text-white text-2xl pt-2 font-bold'>MENU</div>
-        <div className='text-white pt-3 font-bold'><Link to='/boards'>Create New Board</Link></div>
-        <div className='text-white pt-3 font-bold'>My Profile</div>
+    <div className="flex">
+      <aside className='fixed hidden md:block bg-blue-950 w-64 justify-center px-2 top-16 left-0 h-[calc(100vh-64px)]'>
+        <div className='text-white text-3xl pt-2 font-bold text-center'>MENU</div>
+        <div className='text-white pt-3 text-2xl font-bold text-center'><Link to='/boards'>Create New Board</Link></div>
+        <div className='text-white pt-3 text-2xl font-bold text-center'>My Profile</div>
       </aside>
-      <main className='p-2 flex-1'>
+      <main className='p-2 flex-1 ml-0 md:ml-64'>
         <h1 className='text-3xl text-center pb-4 font-bold'>List of My Boards</h1>
         {displayBoards.length===0?(<p>No Boards to display</p>):(
           displayBoards.map((board)=>(

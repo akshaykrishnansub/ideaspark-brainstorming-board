@@ -34,7 +34,6 @@ const Board = () => {
   const [editingCategoryId,setEditingCategoryId]=useState(null); //initial state for edit category id
   const [editCategoryName,setEditCategoryName]=useState(""); //initial state for edit categoryName
 
-
   const handleSaveBoardName=async()=>{
     if(!boardName.trim()){
       return;
@@ -319,8 +318,8 @@ const Board = () => {
       </>
     }
     />
-    <div className='flex min-h-screen'>
-      <aside className='w-64 bg-blue-950'>
+    <div className='flex'>
+      <aside className='fixed hidden md:block w-64 bg-blue-950 justify-center px-2 top-16 left-0 h-[calc(100vh-64px)]'>
       <div className='text-white pt-4 px-2 font-bold text-2xl hover:text-amber-600 cursor-pointer' onClick={()=>setShowModal(true)}>Name of the Board</div>
       <div className='text-white font-bold pt-4 px-2 text-2xl'>Category<br/>----------------------</div>
       <div className='text-white px-2 hover:text-amber-600 cursor-pointer' 
@@ -332,8 +331,8 @@ const Board = () => {
       setShowCategoryModal(true)}}>Add a Category</div>
       <div className='px-2 pt-6 font-extrabold text-white text-3xl'>Invite Members to the board</div>
       </aside>
-      <main className='flex-1 text-2xl text-center font-extrabold'>
-        <div className='h-14 bg-amber-800 p-3 text-white'>
+      <main className='flex-1 text-2xl text-center font-extrabold ml-0 md:ml-64 md:mb-5'>
+        <div className='bg-amber-800 p-3 text-white'>
           {savedBoardName || 'No board created yet'}
         </div>
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 items-start">
@@ -348,7 +347,7 @@ const Board = () => {
             savedCategoryName.map(category=>(
               <div
               key={category.id}
-              className='bg-blue-500 text-white px-6 py-4 rounded shadow-lg w-96 border hover:border-amber-600'
+              className='bg-blue-500 text-white px-6 py-4 rounded shadow-lg w-full border hover:border-amber-600'
               >
                 <div className='flex justify-between items-center'>
                 {editingCategoryId===category.id?(
@@ -375,7 +374,7 @@ const Board = () => {
                       {editingCardId===card.id?(
                        <>
                        <div>
-                        <textarea className='text-black bg-white p-1 w-80' value={editCardContent} onChange={(e)=>setEditCardContent(e.target.value)}/>
+                        <textarea className='text-black bg-white p-1 w-full' value={editCardContent} onChange={(e)=>setEditCardContent(e.target.value)}/>
                           <div className='flex gap-3 mt-3'>
                             <button className='bg-green-800 p-2 rounded-lg'onClick={()=>handleCardUpdate(card.id,category.id)}>Save Changes</button>
                             <button className='bg-red-700 p-2 rounded-lg' onClick={()=>{setEditingCardId(null);setEditCardContent("");}}>Cancel</button>
