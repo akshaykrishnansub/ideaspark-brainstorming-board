@@ -80,7 +80,7 @@ const updateBoard=async(req,res)=>{
             return res.status(400).json({error:'Board title required'});
         }
 
-        const updatedBoard=await updateBoardById(board_id,owner_id,title);
+        const updatedBoard=await updateBoardById(board_id,title,owner_id);
 
         if(!updatedBoard){
             return res.status(403).json({error:'Unauthorized or Board not found'})

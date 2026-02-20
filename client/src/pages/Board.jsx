@@ -34,6 +34,9 @@ const Board = () => {
   const [editingCategoryId,setEditingCategoryId]=useState(null); //initial state for edit category id
   const [editCategoryName,setEditCategoryName]=useState(""); //initial state for edit categoryName
 
+  const [editingBoard,setEditingBoard]=useState(false);
+  const [editBoardTitle,setEditBoardTitle]=useState("");
+
   const handleSaveBoardName=async()=>{
     if(!boardName.trim()){
       return;
@@ -306,6 +309,31 @@ const Board = () => {
     }
   }
 
+  const handleUpdateBoard=async()=>{
+    if(!editBoardTitle.trim()){
+      return;
+    }
+    try{
+      const res=await fetch(`http://localhost:5000/api/boards/${boardId}`,{
+        method:'PUT',
+        credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({title:editBoardTitle})
+      })
+      const data=await res.json();
+      if(!res.ok){
+        console.error(data.error);
+        return;
+      }
+
+      //Update state
+      setSavedBoardName(editBoardTitle);
+      setEditingBoard(false);
+    }catch(err){
+      console.error('Error while updating board',err)
+    }
+  }
+
   return (
     <>
     <title>IdeaSpark | Boards</title>
@@ -331,11 +359,27 @@ const Board = () => {
       setShowCategoryModal(true)}}>Add a Category</div>
       <div className='px-2 pt-6 font-extrabold text-white text-3xl'>Invite Members to the board</div>
       </aside>
-      <main className='flex-1 text-2xl text-center font-extrabold ml-0 md:ml-64 md:mb-5'>
-        <div className='bg-amber-800 p-3 text-white'>
-          {savedBoardName || 'No board created yet'}
+      <main className='flex-1 text-2xl text-center font-extrabold ml-0 md:ml-64 mb-5'>
+        <div className='bg-amber-800 p-3 w-full text-white mb-6 h-14 flex justify-center items-center'>
+          {editingBoard?(
+            <div className='flex items-center gap-3'>
+              <input type="text" className='text-black bg-white p-1' 
+              value={editBoardTitle}
+              onChange={(e)=>setEditBoardTitle(e.target.value)}
+              />
+              <button className='bg-green-700 p-1 rounded' onClick={handleUpdateBoard}>Save Changes</button>
+              <button className='bg-red-700 p-1 rounded' onClick={()=>{setEditingBoard(false);setEditBoardTitle(savedBoardName);}}>Cancel</button>
+            </div>
+          ):(
+            <div className='flex items-center gap-3'>
+              {savedBoardName || 'No board created yet'}
+              {savedBoardName &&(
+                <button className='cursor-pointer' title="Edit This Board Name" onClick={()=>{setEditingBoard(true);setEditBoardTitle(savedBoardName)}}>✏️</button>
+              )}
+            </div>
+          )}
         </div>
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 items-start">
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 items-start mb-6">
           {boardSaveSuccess &&(
           <div className='bg-green-400 text-white text-sm mb-4 inline-block'>
             {boardSaveSuccess}
