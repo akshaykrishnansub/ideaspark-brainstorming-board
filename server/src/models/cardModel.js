@@ -41,7 +41,7 @@ const deleteCardsByBoardId=async(board_id)=>{
 
 //Update card by ID
 const updateCardById=async(card_id,content)=>{
-    const result=await db.query('UPDATE cards SET content=$1 WHERE id=$2 RETURNING *',[content,card_id]);
+    const result=await db.query('UPDATE cards SET content=$1,updatedAt=CURRENT_TIMESTAMP WHERE id=$2 RETURNING *',[content,card_id]);
     return result.rows[0];
 }
 
