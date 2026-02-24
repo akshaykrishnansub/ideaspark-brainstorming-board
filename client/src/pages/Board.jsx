@@ -21,6 +21,10 @@ const Board = () => {
   const [boardName,setBoardName]=useState('') // for board name input
   const [savedBoardName,setSavedBoardName]=useState('') //for saving the board's name
 
+  const [showInviteModal,setShowInviteModal]=useState(false); //Initial state for invite Modal
+  const [inviteEmail,setInviteEmail]=useState(''); // Initial state for invite mail
+  const [inviteSuccessMessage,setInviteSuccessMessage]=useState(''); // Initial state for invite success
+
   const [showCategoryModal,setShowCategoryModal]=useState(false); //for category modal
   const [categoryName,setCategoryName]=useState(''); //for category name input
   const [savedCategoryName,setSavedCategoryName]=useState([]); //for saving category's name
@@ -410,6 +414,33 @@ const Board = () => {
     }
   }
 
+  const handleInviteMember=async()=>{
+    if(!inviteEmail.trim()){
+      return;
+    }
+    try{
+      const res=await fetch(`http://localhost:5000/api/boards/${boardId}/invite`,{
+        method:'POST',
+        credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email:inviteEmail})
+      })
+      const data=await res.json();
+      if(!res.ok){
+        setInviteSuccessMessage(data.message || 'Error inviting user');
+        return;
+      }
+      setInviteSuccessMessage('User Invited Successfully ✅');
+      setInviteEmail("");
+      setTimeout(()=>{
+        setShowInviteModal(false);
+        setInviteSuccessMessage("");
+      },1500);
+    }catch(err){
+      console.error('Error Inviting members',err);
+    }
+  }
+
   
   return (
     <>
@@ -434,7 +465,13 @@ const Board = () => {
           return;
         }
       setShowCategoryModal(true)}}>Add a Category</div>
-      <div className='px-2 pt-6 font-extrabold text-white text-3xl'>Invite Members to the board</div>
+      <div className='px-2 pt-6 font-extrabold text-white text-3xl hover:text-amber-700 cursor-pointer' 
+      onClick={()=>{
+        if(!boardId){
+          alert('Please save the board first');
+          return;
+        }
+        setShowInviteModal(true)}}>Invite Members to the board</div>
       </aside>
       <main className='flex-1 text-2xl text-center font-extrabold ml-0 md:ml-64 mb-5'>
         <div className='bg-amber-800 p-3 w-full text-white mb-6 h-14 flex justify-center items-center'>
@@ -586,6 +623,25 @@ const Board = () => {
       </div>
     </div>
   ):null}
+
+  {showInviteModal && (
+    <div className='fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center'>
+      <div className='bg-white w-96 p-5'>
+        <h1 className='text-2xl font-medium text-center'>Invite User</h1>
+        <input type="email" className='w-full p-3 mt-4 border rounded' placeholder='Enter invite email here' value={inviteEmail} 
+        onChange={(e)=>setInviteEmail(e.target.value)}/>
+        {inviteSuccessMessage && (
+          <div className="mt-3 text-sm text-center text-green-600">
+            {inviteSuccessMessage}
+          </div>
+        )}
+        <div className='flex justify-center gap-4 mt-4'>
+          <button className='bg-green-600 p-2 text-white font-medium' onClick={handleInviteMember}>Invite</button>
+          <button className='bg-red-600 p-2 text-white font-medium' onClick={()=>{setShowInviteModal(false);setInviteEmail("");setInviteSuccessMessage("")}}>Cancel</button>
+        </div>
+      </div>
+    </div>
+  )}
     </>
   )
 }
