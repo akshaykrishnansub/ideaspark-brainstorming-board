@@ -45,4 +45,13 @@ const updateCardById=async(card_id,content)=>{
     return result.rows[0];
 }
 
-export {insertCard,calculateMaxPositionByCategory,findCardsByCategoryId,findCardById,deleteCardById,deleteCardsByBoardId,deleteCardsByCategoryId,updateCardById}
+const updateCardPositions=async(cards)=>{
+    let cardsToUpdate=[];
+    for(const card of cards){
+        const result=await db.query('UPDATE cards SET category_id=$1,position=$2,updatedAt=CURRENT_TIMESTAMP WHERE id=$3 RETURNING *',[card.category_id,card.position,card.id]);
+        cardsToUpdate.push(result.rows[0])
+    }
+    return cardsToUpdate;
+}
+
+export {insertCard,calculateMaxPositionByCategory,findCardsByCategoryId,findCardById,deleteCardById,deleteCardsByBoardId,deleteCardsByCategoryId,updateCardById,updateCardPositions}

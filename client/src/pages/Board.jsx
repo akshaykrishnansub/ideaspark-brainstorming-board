@@ -361,6 +361,7 @@ const Board = () => {
       adjustedDestIndex-=1;
     }
 
+    //clamp card safely
     if (adjustedDestIndex < 0) adjustedDestIndex = 0;
     if (adjustedDestIndex > destCategory.cards.length)
       adjustedDestIndex = destCategory.cards.length;

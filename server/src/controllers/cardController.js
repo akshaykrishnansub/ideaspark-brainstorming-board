@@ -1,4 +1,4 @@
-import { insertCard,calculateMaxPositionByCategory, findCardById, deleteCardById, updateCardById } from "../models/cardModel.js";
+import { insertCard,calculateMaxPositionByCategory, findCardById, deleteCardById, updateCardById,updateCardPositions } from "../models/cardModel.js";
 import { findBoardByBoardIdAndOwnerId } from "../models/boardModel.js";
 import { findCategoryByIdAndBoardId } from "../models/categoryModel.js";
 
@@ -89,4 +89,39 @@ const updateCard=async(req,res)=>{
     }
 }
 
-export {createCard,deleteCard,updateCard}
+const moveCards=async(req,res)=>{
+    try{
+        const owner_id=req.user.id;
+        const {cards}=req.body;
+        console.log("BODY:", req.body);
+        console.log("USER:", req.user);
+
+        if(!cards){
+            return res.status(400).json({error:'Invalid cards data'});
+        }
+
+        //Basic security check
+        for(const card of cards){
+            const existingCard=await findCardById(card.id);
+
+            if(!existingCard){
+                return res.status(404).json({error:'Card not found'});
+            }
+
+            const board=await findBoardByBoardIdAndOwnerId(existingCard.board_id,owner_id);
+
+            if(!board){
+                return res.status(403).json({error:'Unauthorized'});
+            }
+        }
+
+        await updateCardPositions(cards);
+        res.json({message:'Card updated successfully'});
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({error:'Error moving cards'})
+    }
+}
+
+export {createCard,deleteCard,updateCard,moveCards}
