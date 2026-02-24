@@ -66,7 +66,7 @@ const updateCard=async(req,res)=>{
         const owner_id=req.user.id;
         const card_id=req.params.id;
         const {content}=req.body;
-        if(!content.trim()){
+        if(!content || !content.trim()){
             return res.status(400).json({error:'Content is required'});
         }
 

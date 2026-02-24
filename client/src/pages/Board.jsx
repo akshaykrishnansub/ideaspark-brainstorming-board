@@ -37,6 +37,8 @@ const Board = () => {
   const [editingBoard,setEditingBoard]=useState(false);
   const [editBoardTitle,setEditBoardTitle]=useState("");
 
+  const [draggedCard,setDraggedCard]=useState(null);
+
   const handleSaveBoardName=async()=>{
     if(!boardName.trim()){
       return;
@@ -150,10 +152,10 @@ const Board = () => {
           cards:[...category.cards,newCard]
         }
         : category
-      ),
-      setCardInput(''),
-      setActiveCategoryId(null)
-    )
+      )
+    );
+     setCardInput('');
+     setActiveCategoryId(null);
 
     }catch(err){
       console.error("Error creating card",err)
@@ -334,6 +336,80 @@ const Board = () => {
     }
   }
 
+  const handleDrop=async(destCategoryId,destIndex)=>{
+    if(!draggedCard){
+      return;
+    }
+
+    const {cardId,sourceCategoryId,sourceIndex}=draggedCard;
+
+    //creating a deep copy
+    const newState=JSON.parse(JSON.stringify(savedCategoryName));
+
+    const sourceCategory=newState.find(c=>c.id===sourceCategoryId);
+    const destCategory=newState.find(c=>c.id===destCategoryId);
+
+    const movedCard=sourceCategory.cards[sourceIndex];
+
+    //Remove card from source
+    sourceCategory.cards.splice(sourceIndex,1)
+
+    //Adjust index when moving down inside same category
+    let adjustedDestIndex=destIndex;
+
+    if(sourceCategoryId===destCategoryId && sourceIndex < destIndex){
+      adjustedDestIndex-=1;
+    }
+
+    if (adjustedDestIndex < 0) adjustedDestIndex = 0;
+    if (adjustedDestIndex > destCategory.cards.length)
+      adjustedDestIndex = destCategory.cards.length;
+
+    //Insert card into destination
+    destCategory.cards.splice(adjustedDestIndex,0,movedCard);
+
+    //Recalculate the position
+    newState.forEach(category=>{
+      category.cards.forEach((card,index)=>{
+        card.position=index;
+      })
+    })
+
+    //Update the UI immediately
+    setSavedCategoryName(newState);
+    setDraggedCard(null);
+
+    //Update DB
+    await updatePositionsInDB(newState,sourceCategoryId,destCategoryId)
+
+  }
+
+  const updatePositionsInDB=async(state,sourceCategoryId,destCategoryId)=>{
+    const affectedCategories= state.filter(c=>c.id===sourceCategoryId || c.id===destCategoryId);
+    const cardsToUpdate=[];
+    affectedCategories.forEach(category=>{
+      category.cards.forEach(card=>{
+        cardsToUpdate.push({
+          id:card.id,
+          category_id:category.id,
+          position:card.position
+        })
+      })
+    })
+
+    try{
+      await fetch('http://localhost:5000/api/cards/moveCards',{
+        method:"PUT",
+        credentials:"include",
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({cards:cardsToUpdate})
+      })
+    }catch(err){
+      console.error("Error Updating positions",err)
+    }
+  }
+
+  
   return (
     <>
     <title>IdeaSpark | Boards</title>
@@ -413,8 +489,31 @@ const Board = () => {
                 )}
                 </div>
                 <div className='mt-4 space-y-2'>
-                  {category.cards.map(card=>(
-                    <div key={card.id} className='bg-blue-300 border p-2 font-normal flex justify-between items-center'>
+                  <div onDragOver={(e)=>e.preventDefault()}
+                  onDrop={()=>handleDrop(category.id,0)}
+                  className='h-3'
+                    ></div>
+                  {category.cards.map((card,index)=>(
+                    <div key={card.id}>
+                      <div draggable
+                      onDragStart={()=>{
+                        setDraggedCard({
+                          cardId:card.id,
+                          sourceCategoryId:category.id,
+                          sourceIndex:index
+                        })
+                      }}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e)=>{
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const rect=e.currentTarget.getBoundingClientRect();
+                        const dropPosition=e.clientY-rect.top; //Move Y inside the card
+                        let insertIndex=dropPosition<rect.height/2?index:index+1;
+                        handleDrop(category.id,insertIndex)
+                      }
+                      }
+                      className='bg-blue-300 border p-2 font-normal flex justify-between items-center cursor-move'>
                       {editingCardId===card.id?(
                        <>
                        <div>
@@ -434,8 +533,13 @@ const Board = () => {
                           </div>
                         </div>
                       )}
+                      </div>
                     </div>
-                  ))}
+                    ))}
+                    <div
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={() => handleDrop(category.id, category.cards.length)}
+                    className='h-4'></div>
                 </div>
 
                 {activeCategoryId!==category.id&&(
