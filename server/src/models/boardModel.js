@@ -25,4 +25,32 @@ const updateBoardById=async(board_id,title,owner_id)=>{
     return result.rows[0]
 }
 
-export {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId,deleteBoardById,updateBoardById}
+//Get Boards only by ID (without owner check)
+const findBoardById=async(board_id)=>{
+    const result=await db.query('SELECT * from boards WHERE id=$1',[board_id])
+    return result.rows[0];
+}
+
+//find user by Email
+const findUserByEmail=async(email)=>{
+    const result=await db.query('SELECT * from users where username=$1',[email]);
+    return result.rows[0];
+}
+
+//check if collaborator exists
+const findCollaborator=async(board_id,user_id)=>{
+    const result=await db.query('SELECT 1 from board_users WHERE board_id=$1 AND user_id=$2',[board_id,user_id]);
+    return result.rows.length>0;
+}
+
+const addCollaborator=async(board_id,user_id)=>{
+    const result=await db.query('INSERT into board_users(board_id,user_id) VALUES($1,$2) RETURNING *',[board_id,user_id]);
+    return result.rows[0];
+}
+
+const findBoardsSharedWithUser=async(user_id)=>{
+    const result=await db.query('SELECT b.* FROM boards b INNER JOIN board_users bu ON b.id=bu.board_id WHERE bu.user_id=$1 ORDER BY b.id DESC',[user_id]);
+    return result.rows
+}
+
+export {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId,deleteBoardById,updateBoardById,findBoardById,findUserByEmail,findCollaborator,addCollaborator,findBoardsSharedWithUser}

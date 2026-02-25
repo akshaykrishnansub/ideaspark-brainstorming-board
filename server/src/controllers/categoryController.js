@@ -1,18 +1,19 @@
 import {deleteCategoryById, findCategoryById, insertCategory, updateCategoryById} from "../models/categoryModel.js";
 import { findBoardByBoardIdAndOwnerId } from "../models/boardModel.js";
 import { deleteCardsByCategoryId } from "../models/cardModel.js";
+import { canEditBoard } from "../utils/permissions.js";
 
 const createCategory=async(req,res)=>{
     try{
-        const owner_id=req.user.id;
+        const userId=req.user.id;
         const {board_id,name}=req.body;
         if(!board_id||!name){
             return res.status(400).json({error:'Board ID and category name are required'})
         }
 
         //verify if board belongs to logged in user
-        const board=await findBoardByBoardIdAndOwnerId(board_id,owner_id);
-        if(!board){
+        const isAllowed=await canEditBoard(board_id,userId);
+        if(!isAllowed){
             return res.status(403).json({error:'Unauthorized access to board'});
         }
 
@@ -34,7 +35,7 @@ const createCategory=async(req,res)=>{
 
 const deleteCategory=async(req,res)=>{
     try{
-        const owner_id=req.user.id;
+        const userId=req.user.id;
         const category_id=req.params.id;
 
         const category=await findCategoryById(category_id);
@@ -42,8 +43,8 @@ const deleteCategory=async(req,res)=>{
             return res.status(404).json({error:'Category not found'});
         }
 
-        const board=await findBoardByBoardIdAndOwnerId(category.board_id,owner_id);
-        if(!board){
+        const isAllowed=await canEditBoard(category.board_id,userId);
+        if(!isAllowed){
             return res.status(403).json({error:'Unauthorised'});
         }
 
@@ -62,7 +63,7 @@ const deleteCategory=async(req,res)=>{
 
 const updateCategory=async(req,res)=>{
     try{
-        const owner_id=req.user.id;
+        const userId=req.user.id;
         const category_id=req.params.id;
         const {name}=req.body;
         if(!name.trim()){
@@ -74,8 +75,8 @@ const updateCategory=async(req,res)=>{
             return res.status(404).json({error:'Category not found'})
         }
 
-        const board=await findBoardByBoardIdAndOwnerId(category.board_id,owner_id);
-        if(!board){
+        const isAllowed=await canEditBoard(category.board_id,userId);
+        if(!isAllowed){
             return res.status(403).json({error:'Unauthorized'});
         }
 

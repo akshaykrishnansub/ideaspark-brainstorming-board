@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import authenticateToken from '../middleware/authMiddleware.js';
-import { createBoard, getBoards, getBoardById, deleteBoard, updateBoard } from '../controllers/boardController.js';
+import { createBoard, getBoards, getBoardById, deleteBoard, updateBoard,inviteUser } from '../controllers/boardController.js';
 import {createCard} from '../controllers/cardController.js'
 
 const router=Router();
@@ -9,6 +9,7 @@ router.post('/',authenticateToken,createBoard);
 router.get("/",authenticateToken,getBoards);
 router.get("/:board_id",authenticateToken,getBoardById);
 router.post("/:board_id/cards",authenticateToken,createCard)
+router.post("/:board_id/invite",authenticateToken,inviteUser)
 router.delete("/:id",authenticateToken,deleteBoard);
 router.put("/:id",authenticateToken,updateBoard)
 

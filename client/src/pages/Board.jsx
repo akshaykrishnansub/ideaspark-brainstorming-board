@@ -353,10 +353,8 @@ const Board = () => {
     const sourceCategory=newState.find(c=>c.id===sourceCategoryId);
     const destCategory=newState.find(c=>c.id===destCategoryId);
 
-    const movedCard=sourceCategory.cards[sourceIndex];
-
-    //Remove card from source
-    sourceCategory.cards.splice(sourceIndex,1)
+    const movedCard=sourceCategory.cards.find(c=>c.id===cardId);
+    sourceCategory.cards=sourceCategory.cards.filter(c=>c.id!==cardId)
 
     //Adjust index when moving down inside same category
     let adjustedDestIndex=destIndex;

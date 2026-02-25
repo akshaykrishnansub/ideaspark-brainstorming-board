@@ -1,10 +1,11 @@
 import { insertCard,calculateMaxPositionByCategory, findCardById, deleteCardById, updateCardById,updateCardPositions } from "../models/cardModel.js";
 import { findBoardByBoardIdAndOwnerId } from "../models/boardModel.js";
 import { findCategoryByIdAndBoardId } from "../models/categoryModel.js";
+import { canEditBoard } from "../utils/permissions.js";
 
 const createCard=async(req,res)=>{
     try{
-        const owner_id=req.user.id;
+        const userId=req.user.id;
         const board_id=req.params.board_id;
         const {category_id,content}=req.body;
 
@@ -14,8 +15,8 @@ const createCard=async(req,res)=>{
         }
 
         //check board ownership
-        const board=await findBoardByBoardIdAndOwnerId(board_id,owner_id);
-        if(!board){
+        const isAllowed=await canEditBoard(board_id,userId);
+        if(!isAllowed){
             return res.status(403).json({error:'Unauthorized board access'});
         }
 
@@ -42,15 +43,15 @@ const createCard=async(req,res)=>{
 
 const deleteCard=async(req,res)=>{
     try{
-        const owner_id=req.user.id;
+        const userId=req.user.id;
         const card_id=req.params.id;
         //finding the card by id
         const card=await findCardById(card_id);
         if(!card){
             return res.status(404).json({error:'Card not found'})
         }
-        const board=await findBoardByBoardIdAndOwnerId(card.board_id,owner_id);
-        if(!board){
+        const isAllowed=await canEditBoard(card.board_id,userId);
+        if(!isAllowed){
             return res.status(403).json({error:'Unauthorized'});
         }
         await deleteCardById(card_id);
@@ -63,7 +64,7 @@ const deleteCard=async(req,res)=>{
 
 const updateCard=async(req,res)=>{
     try{
-        const owner_id=req.user.id;
+        const userId=req.user.id;
         const card_id=req.params.id;
         const {content}=req.body;
         if(!content || !content.trim()){
@@ -75,8 +76,8 @@ const updateCard=async(req,res)=>{
             return res.status(404).json({error:'Card not found'});
         }
 
-        const board=await findBoardByBoardIdAndOwnerId(card.board_id,owner_id);
-        if(!board){
+        const isAllowed=await canEditBoard(card.board_id,userId);
+        if(!isAllowed){
             return res.status(403).json({error:'Unauthorized'});
         }
 
@@ -91,10 +92,8 @@ const updateCard=async(req,res)=>{
 
 const moveCards=async(req,res)=>{
     try{
-        const owner_id=req.user.id;
+        const userId=req.user.id;
         const {cards}=req.body;
-        console.log("BODY:", req.body);
-        console.log("USER:", req.user);
 
         if(!cards){
             return res.status(400).json({error:'Invalid cards data'});
@@ -108,9 +107,9 @@ const moveCards=async(req,res)=>{
                 return res.status(404).json({error:'Card not found'});
             }
 
-            const board=await findBoardByBoardIdAndOwnerId(existingCard.board_id,owner_id);
+            const isAllowed=await canEditBoard(existingCard.board_id,userId);
 
-            if(!board){
+            if(!isAllowed){
                 return res.status(403).json({error:'Unauthorized'});
             }
         }
