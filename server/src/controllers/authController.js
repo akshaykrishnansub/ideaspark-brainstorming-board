@@ -1,4 +1,4 @@
-import {findUserByMail, createUser } from "../models/userModel.js";
+import {findUserByMail, createUser, findUserById } from "../models/userModel.js";
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
@@ -34,7 +34,7 @@ const login=async(req,res)=>{
         //find user by email
         const user=await findUserByMail(username);
         if(!user)
-            return res.status(400).json({error:'User not found'});
+            return res.status(400).json({error:'User not found, Please register first and then try signing in'});
 
         //compare the password
         const matchedPassword=await bcrypt.compare(password,user.password_hash)
@@ -50,7 +50,7 @@ const login=async(req,res)=>{
             secure:true,
             maxAge:3600000
         })
-        return res.json({message:'Login Successful',token})
+        return res.json({message:'Login Successful',token,user:{id:user.id,username:user.username}})
     }catch(err){
         console.error(err);
         res.status(500).json({error:'Internal server error'})
@@ -72,6 +72,24 @@ const logout=(req,res)=>{
     }
 }
 
+const getProfile=async(req,res)=>{
+    try{
+        const userId=req.user.id;
+        if(!userId){
+            return res.status(401).json({error:'Not Authenticated'});
+        }
+
+        const user=await findUserById(userId);
+        if(!user){
+            return res.status(404).json({error:'User not found'});
+        }
+        res.json({user});
+    }catch(err){
+        console.error(err);
+        res.status(500).json({error:'Server error'});
+    }
+}
 
 
-export {registerUser,login,logout}
+
+export {registerUser,login,logout,getProfile}

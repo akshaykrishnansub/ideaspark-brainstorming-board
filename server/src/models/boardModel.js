@@ -53,4 +53,8 @@ const findBoardsSharedWithUser=async(user_id)=>{
     return result.rows
 }
 
-export {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId,deleteBoardById,updateBoardById,findBoardById,findUserByEmail,findCollaborator,addCollaborator,findBoardsSharedWithUser}
+const deleteBoardUsersByBoardId=async(board_id)=>{
+    const result=await db.query('DELETE from board_users where board_id=$1 RETURNING *',[board_id])
+    return result.rows;
+}
+export {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId,deleteBoardById,updateBoardById,findBoardById,findUserByEmail,findCollaborator,addCollaborator,findBoardsSharedWithUser,deleteBoardUsersByBoardId}

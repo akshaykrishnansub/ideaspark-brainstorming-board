@@ -2,11 +2,22 @@ import React, { useContext, useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../src/context/AuthContext.jsx'
+import Avatar from '../components/Avatar.jsx'
 
 const Dashboard = () => {
 
   const {logout}=useContext(AuthContext)
+  const {profile}=useContext(AuthContext)
   const navigate=useNavigate();
+  const [toast,setToast]=useState(null);
+
+  //Global function to show messages
+  const showToast=(message,type="success")=>{
+    setToast({message,type});
+    setTimeout(()=>{
+      setToast(null);
+    },3000);
+  }
 
   useEffect(()=>{
     fetchBoards();
@@ -56,6 +67,8 @@ const Dashboard = () => {
         prevBoards.filter(board=>board.id!==boardId)
       )
 
+      showToast('Board Deleted Successfully ✅','success');
+
     }catch(err){
       console.error('Error deleting board',err);
     }
@@ -67,6 +80,7 @@ const Dashboard = () => {
     <Navbar
     showLogin={false}
     showSignup={false}
+    profile={profile}
     rightSlot={
     <button className='bg-amber-600 p-2 rounded hover:bg-amber-700 transition-colors' onClick={logout}>Logout</button>
     }/>
@@ -74,9 +88,16 @@ const Dashboard = () => {
       <aside className='fixed hidden md:block bg-blue-950 w-64 justify-center px-2 top-16 left-0 h-[calc(100vh-64px)]'>
         <div className='text-white text-3xl pt-2 font-bold text-center'>MENU</div>
         <div className='text-white pt-3 text-2xl font-bold text-center'><Link to='/boards'>Create New Board</Link></div>
-        <div className='text-white pt-3 text-2xl font-bold text-center'>My Profile</div>
       </aside>
       <main className='p-2 flex-1 ml-0 md:ml-64'>
+        {toast && (
+          <div className='fixed top-6 right-6 z-50 animate-slide-in'>
+            <div className={`text-white px-4 py-2 rounded-lg shadow-lg
+            ${toast.type==="success"?"bg-green-400":"bg-red-400"}`}>
+              {toast.message}
+            </div>
+          </div>
+          )}
         <h1 className='text-3xl text-center pb-4 font-bold'>My Boards</h1>
         {displayOwnedBoards.length===0?<p className='text-center mb-3'>No Owned Boards to display</p>:(
           displayOwnedBoards.map((board)=>(
@@ -89,7 +110,7 @@ const Dashboard = () => {
           ))
         )}
         <h1 className='text-3xl text-center pb-4 font-bold'>Shared with Me</h1>
-        {displaySharedBoards.length===0?<p>No Shared boards</p>
+        {displaySharedBoards.length===0?<p className='text-center'>No Shared boards</p>
         :(
           displaySharedBoards.map((board)=>(
             <div key={board.id}

@@ -1,4 +1,4 @@
-import {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId, deleteBoardById, updateBoardById, findBoardById, findUserByEmail, findCollaborator, addCollaborator,findBoardsSharedWithUser} from "../models/boardModel.js";
+import {insertBoard,findBoardByBoardIdAndOwnerId,findBoardsByOwnerId, deleteBoardById, updateBoardById, findBoardById, findUserByEmail, findCollaborator, addCollaborator,findBoardsSharedWithUser,deleteBoardUsersByBoardId} from "../models/boardModel.js";
 import { deleteCategoryByBoardId, findCategoriesByBoardId } from "../models/categoryModel.js";
 import { deleteCardsByBoardId, findCardsByCategoryId } from "../models/cardModel.js";
 
@@ -64,11 +64,16 @@ const deleteBoard=async(req,res)=>{
             return res.status(403).json({error:'Unauthorised'})
         }
 
+        console.log("Board owner:", board.owner_id);
+        console.log("Logged user:", req.user.id);
         //Delete card first
         await deleteCardsByBoardId(board_id);
 
         //Delete category
         await deleteCategoryByBoardId(board_id);
+
+        //Delete Collaborators
+        await deleteBoardUsersByBoardId(board_id);
 
         //Delete Board
         await deleteBoardById(board_id);

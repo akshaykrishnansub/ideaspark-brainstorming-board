@@ -11,7 +11,7 @@ function Login(){
         password:""
     })
 
-    const {setIsAuth}=useContext(AuthContext)
+    const {setIsAuth,setProfile}=useContext(AuthContext)
     const navigate=useNavigate();
     const [error,setError]=useState("")
 
@@ -39,6 +39,7 @@ function Login(){
             })
 
             const data=await res.json();
+            
             if(!res.ok){
                 setError(data.error);
                 return;
@@ -47,6 +48,7 @@ function Login(){
             setFormData({username:"",password:""})
             setIsAuth(true);
             console.log("isAuth set to true");
+            setProfile(data.user);
             navigate("/dashboard")
         }catch(err){
             setError('Server error');
@@ -63,6 +65,11 @@ function Login(){
             <form onSubmit={handleSubmit}>
                 <div className="bg-white p-8 w-full max-w-md shadow-lg rounded-lg">
                 <h1 className="text-center font-bold mb-4 text-2xl">Login to Access IdeaSpark</h1>
+                {error && (
+                    <p className="text-red-600 text-center font-medium p-2 mb-4">
+                        {error}
+                        </p>
+                    )}
                 <label htmlFor="email" className="font-medium">Username/Email</label>
                 <input type="email" 
                 className="w-full p-2 mt-4 border rounded mb-4"

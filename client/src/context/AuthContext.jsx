@@ -3,22 +3,33 @@ import { createContext,useEffect,useState} from "react";
 //create a context
 const AuthContext=createContext();
 
-
-//
 const AuthProvider=({children})=>{
     const [loading,setLoading]=useState(true);
     const [isAuth,setIsAuth]=useState(false);
+    const [profile,setProfile]=useState(null);
 
-    useEffect(()=>{
-        fetch('http://localhost:5000/api/me',{
+    const getProfile=async()=>{
+        setLoading(true);
+        try{
+            const res=await fetch('http://localhost:5000/api/me',{
             credentials:"include"
         })
-        .then(res=>{
-            if(res.ok)
-                setIsAuth(true);
-            else setIsAuth(false);
-        })
-        .finally(()=>setLoading(false));
+        if(!res.ok)
+            throw new Error('Not Authenticated');
+        const data=await res.json();
+        setProfile(data.user);
+        setIsAuth(true);
+        }catch(err){
+            setProfile(null);
+            setIsAuth(false);
+        }
+        finally{
+            setLoading(false);
+        };
+    }
+
+    useEffect(()=>{
+        getProfile();
     },[]);
 
     const logout=async()=>{
@@ -27,12 +38,13 @@ const AuthProvider=({children})=>{
             credentials:'include'
         });
         setIsAuth(false);
+        setProfile(null);
     }
 
 
     return(
         //provide the context value
-        <AuthContext.Provider value={{isAuth,logout,setIsAuth,loading}}>
+        <AuthContext.Provider value={{isAuth,logout,setIsAuth,loading,profile,setProfile}}>
             {children}
         </AuthContext.Provider>
     )

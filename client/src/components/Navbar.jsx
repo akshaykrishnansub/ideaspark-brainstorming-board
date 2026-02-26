@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom"
+import Avatar from "./Avatar.jsx"
 
 function Navbar({
   showLogin=true,
   showSignup=true,
+  profile, //profile name object containing email or name
   rightSlot,
   title="IdeaSpark"
 }){
@@ -19,19 +21,21 @@ function Navbar({
       {/* RIGHT */}
       <div className="flex items-center gap-7">
         {rightSlot ? rightSlot :null}
-        {showLogin ? (
+        {profile && profile.username && (
+        <Avatar username={profile.username} size={40}/>
+        )}
+        {!profile && showLogin && (
           <Link to="/login" className="text-white hover:font-bold hover:cursor-pointer">
           Login
         </Link>
-        ) : null}
-
-        {showSignup ? (
+        )}
+        {!profile && showSignup && (
         <button className="bg-amber-600 px-3 py-2 rounded hover:bg-amber-800 text-white transition hover:cursor-pointer">
           <Link to="/register">
           Sign Up for Free
           </Link>
         </button>
-        ): null}
+        )}
       </div>
 
     </nav>

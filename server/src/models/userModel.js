@@ -11,4 +11,9 @@ const createUser=async(username,password_hash)=>{
     return result.rows[0];
 }
 
-export {createUser,findUserByMail}
+const findUserById=async(id)=>{
+    const result=await db.query('SELECT id,username FROM users WHERE id=$1',[id]);
+    return result.rows[0];
+}
+
+export {createUser,findUserByMail,findUserById}

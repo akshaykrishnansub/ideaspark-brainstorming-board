@@ -6,6 +6,7 @@ import { AuthContext } from '../context/AuthContext.jsx';
 const Board = () => {
 
   const {logout}=useContext(AuthContext);
+  const {profile}=useContext(AuthContext);
 
   const {id}=useParams();
 
@@ -14,8 +15,7 @@ const Board = () => {
       fetchBoardData(id);
     }
   },[id])
-  
-  const [boardSaveSuccess,setBoardSaveSuccess]=useState(''); //success message for board save
+  const [toast,setToast]=useState(null);
   const[boardId,setBoardId]=useState(null); //Initial state of board ID
   const [showModal,setShowModal]=useState(false); //for board modal
   const [boardName,setBoardName]=useState('') // for board name input
@@ -52,10 +52,17 @@ const Board = () => {
       setSavedBoardName(boardName); //set the board name
   }
 
+  //Global function to show messages
+  const showToast=(message,type="success")=>{
+    setToast({message,type});
+    setTimeout(()=>{
+      setToast(null);
+    },3000);
+  }
   //Only save board
   const handleSavedBoard=async()=>{
     if(!savedBoardName.trim()){
-      alert("Please enter the board name first");
+      showToast("Please enter the board name first ❌","error");
       return;
     }
     try{
@@ -71,10 +78,7 @@ const Board = () => {
       return;
     }
     setBoardId(data.board.id);
-    setBoardSaveSuccess('Board created successfully ✅')
-    setTimeout(()=>{
-      setBoardSaveSuccess('')
-    },2000)
+    showToast('Board created successfully ✅',"success")
   }catch(err){
     console.error('Error saving board',err);
   }
@@ -87,7 +91,7 @@ const Board = () => {
     }
 
     if(!boardId){
-      alert('Please create a board first');
+      showToast("Please create a board first ❌","error");
       return;
     }
 
@@ -110,7 +114,7 @@ const Board = () => {
       name:data.category.name,
       cards:[] //array for storing cards
     }
-
+    showToast('Category Saved Successfully ✅',"success");
     setShowCategoryModal(false); //close the category modal
     setCategoryName(''); // clear the category name
     setSavedCategoryName(prev=>[...prev,newCategory]); // set the category name
@@ -158,6 +162,7 @@ const Board = () => {
         : category
       )
     );
+    showToast('Card Saved Successfully ✅',"success");
      setCardInput('');
      setActiveCategoryId(null);
 
@@ -217,6 +222,7 @@ const Board = () => {
           :category
         )
       )
+      showToast('Card Deleted Successfully ✅',"success");
     }catch(err){
       console.error("Error deleting card",err);
     }
@@ -242,6 +248,7 @@ const Board = () => {
     setSavedCategoryName(prev=>
       prev.filter(category=>category.id!==categoryId)
     );
+    showToast('Category Deleted Successfully ✅',"success");
     }catch(err){
       console.error('Error deleting category',err);
     }
@@ -277,6 +284,7 @@ const Board = () => {
         )
       )
       setEditingCardId(null);
+      showToast('Card content edited successfully ✅',"success");
     }catch(err){
       console.error('Error while updating cards',err);
     }
@@ -307,6 +315,7 @@ const Board = () => {
           category
         )
       )
+      showToast('Category Name Edited Successfully ✅',"success");
       setEditingCategoryId(null);
       setEditCategoryName("");
 
@@ -335,6 +344,7 @@ const Board = () => {
       //Update state
       setSavedBoardName(editBoardTitle);
       setEditingBoard(false);
+      showToast('Board Name Changed Successfully ✅',"success");
     }catch(err){
       console.error('Error while updating board',err)
     }
@@ -407,6 +417,7 @@ const Board = () => {
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({cards:cardsToUpdate})
       })
+      showToast('Card Position Updated','success');
     }catch(err){
       console.error("Error Updating positions",err)
     }
@@ -444,7 +455,7 @@ const Board = () => {
     <>
     <title>IdeaSpark | Boards</title>
     <Navbar
-    showLogin={false} showSignup={false}
+    showLogin={false} showSignup={false} profile={profile}
     rightSlot={
       <>
       <button className='bg-green-600 p-2 rounded hover:bg-green-800' onClick={handleSavedBoard} disabled={!!boardId}>Save Board</button>
@@ -459,14 +470,14 @@ const Board = () => {
       <div className='text-white px-2 hover:text-amber-600 cursor-pointer' 
       onClick={()=>{
         if(!boardId){
-          alert("Please save the board first");
+          showToast("Please save the board first ❌","error");
           return;
         }
       setShowCategoryModal(true)}}>Add a Category</div>
       <div className='px-2 pt-6 font-extrabold text-white text-3xl hover:text-amber-700 cursor-pointer' 
       onClick={()=>{
         if(!boardId){
-          alert('Please save the board first');
+          showToast("Please save the board first ❌","error");
           return;
         }
         setShowInviteModal(true)}}>Invite Members to the board</div>
@@ -492,9 +503,12 @@ const Board = () => {
           )}
         </div>
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 items-start mb-6">
-          {boardSaveSuccess &&(
-          <div className='bg-green-400 text-white text-sm mb-4 inline-block'>
-            {boardSaveSuccess}
+          {toast && (
+          <div className='fixed top-6 right-6 z-50 animate-slide-in'>
+            <div className={`text-white px-4 py-2 rounded-lg shadow-lg
+            ${toast.type==="success"?"bg-green-400":"bg-red-400"}`}>
+              {toast.message}
+            </div>
           </div>
           )}
           {savedCategoryName.length===0?(

@@ -67,6 +67,11 @@ const Signup = () => {
               {success}
             </p>
             )}
+            {error && (
+              <p className="text-red-600 text-center font-medium p-2 mb-4">
+                {error}
+                </p>
+              )}
             <label htmlFor="username" className='text-sm font-medium mb-0.5'>
               Username/Email
             </label>
