@@ -43,6 +43,8 @@ const Board = () => {
 
   const [draggedCard,setDraggedCard]=useState(null);
 
+  const [sidebarOpen,setSidebarOpen]=useState(false);
+
   const handleSaveBoardName=async()=>{
     if(!boardName.trim()){
       return;
@@ -74,13 +76,14 @@ const Board = () => {
     })
     const data=await res.json();
     if(!res.ok){
-      console.error(data.error);
+      showToast(data.error||"Failed to create Board ❌","error");
       return;
     }
     setBoardId(data.board.id);
     showToast('Board created successfully ✅',"success")
   }catch(err){
-    console.error('Error saving board',err);
+    console.error(err);
+    showToast("Server error. Please try again ❌", "error");
   }
 }
 
@@ -105,7 +108,7 @@ const Board = () => {
 
       const data=await res.json();
       if(!res.ok){
-        console.error(data.error)
+        showToast(data.error||"Failed to create category ❌","error");
         return;
       }
 
@@ -120,7 +123,8 @@ const Board = () => {
     setSavedCategoryName(prev=>[...prev,newCategory]); // set the category name
 
     }catch(err){
-      console.error("Error creating category",err)
+      console.error(err)
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -142,7 +146,7 @@ const Board = () => {
       })
       const data=await res.json();
       if(!res.ok){
-        console.error(data.error);
+        showToast(data.error||"Failed to create card ❌","error");
         return;
       }
 
@@ -167,7 +171,8 @@ const Board = () => {
      setActiveCategoryId(null);
 
     }catch(err){
-      console.error("Error creating card",err)
+      console.error(err)
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -180,7 +185,7 @@ const Board = () => {
       })
       const data=await res.json();
       if(!res.ok){
-        console.error(data.error);
+        showToast(data.error||"Failed to fetch board Data ❌","error");
         return;
       }
       //setting the board title
@@ -190,7 +195,8 @@ const Board = () => {
       //setting the categories with cards
       setSavedCategoryName(data.categories)
     }catch(err){
-      console.error('Error loading boards',err);
+      console.error(err);
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -207,7 +213,7 @@ const Board = () => {
       )
       const data=await res.json();
       if(!res.ok){
-        console.error(data.error);
+        showToast(data.error||"Failed to delete card ❌","error");
         return;
       }
 
@@ -224,7 +230,8 @@ const Board = () => {
       )
       showToast('Card Deleted Successfully ✅',"success");
     }catch(err){
-      console.error("Error deleting card",err);
+      console.error(err);
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -240,7 +247,7 @@ const Board = () => {
     })
     const data=await res.json();
     if(!res.ok){
-      console.error(data.error);
+      showToast(data.error||"Failed to delete category ❌","error");
       return;
     }
 
@@ -250,7 +257,8 @@ const Board = () => {
     );
     showToast('Category Deleted Successfully ✅',"success");
     }catch(err){
-      console.error('Error deleting category',err);
+      console.error(err);
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -268,7 +276,7 @@ const Board = () => {
 
       const data=await res.json();
       if(!res.ok){
-        console.error(data.error);
+        showToast(data.error||"Failed to Update Card content ❌","error");
         return;
       }
       setSavedCategoryName(prev=>
@@ -286,7 +294,8 @@ const Board = () => {
       setEditingCardId(null);
       showToast('Card content edited successfully ✅',"success");
     }catch(err){
-      console.error('Error while updating cards',err);
+      console.error(err);
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -304,7 +313,7 @@ const Board = () => {
 
       const data=await res.json();
       if(!res.ok){
-        console.error(data.error);
+        showToast(data.error||"Failed to update category ❌","error");
         return;
       }
 
@@ -320,7 +329,8 @@ const Board = () => {
       setEditCategoryName("");
 
     }catch(err){
-      console.error('Error in updating category',err);
+      console.error(err);
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -346,7 +356,8 @@ const Board = () => {
       setEditingBoard(false);
       showToast('Board Name Changed Successfully ✅',"success");
     }catch(err){
-      console.error('Error while updating board',err)
+      console.error(err)
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -419,7 +430,8 @@ const Board = () => {
       })
       showToast('Card Position Updated','success');
     }catch(err){
-      console.error("Error Updating positions",err)
+      console.error(err);
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -446,7 +458,8 @@ const Board = () => {
         setInviteSuccessMessage("");
       },1500);
     }catch(err){
-      console.error('Error Inviting members',err);
+      console.error(err);
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -456,15 +469,22 @@ const Board = () => {
     <title>IdeaSpark | Boards</title>
     <Navbar
     showLogin={false} showSignup={false} profile={profile}
+    leftSlot={
+      <button className='md:hidden text-white p-2 ml-auto cursor-pointer' onClick={()=>setSidebarOpen(true)}>☰</button>
+    }
     rightSlot={
       <>
-      <button className='bg-green-600 p-2 rounded hover:bg-green-800' onClick={handleSavedBoard} disabled={!!boardId}>Save Board</button>
-      <button className='bg-amber-600 p-2 rounded'onClick={logout}>Logout</button>
+      <button className='bg-green-600 p-2 rounded hover:bg-green-800 cursor-pointer disabled:bg-gray-400 disabled:hover:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-70' onClick={handleSavedBoard} disabled={!!boardId}>Save Board</button>
+      <button className='bg-amber-600 p-2 rounded cursor-pointer hover:bg-amber-700'onClick={logout}>Logout</button>
       </>
     }
     />
     <div className='flex'>
-      <aside className='fixed hidden md:block w-64 bg-blue-950 justify-center px-2 top-16 left-0 h-[calc(100vh-64px)]'>
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)}/>
+        )}
+      <aside className={`fixed w-64 bg-blue-950 justify-center px-2 top-0 left-0 h-screen lg:h-[calc(100vh-64px)] transform transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:top-16`}>
+      <button className="lg:hidden text-white text-right w-full cursor-pointer" onClick={() => setSidebarOpen(false)}>✖</button>
       <div className='text-white pt-4 px-2 font-bold text-2xl hover:text-amber-600 cursor-pointer' onClick={()=>setShowModal(true)}>Name of the Board</div>
       <div className='text-white font-bold pt-4 px-2 text-2xl'>Category<br/>----------------------</div>
       <div className='text-white px-2 hover:text-amber-600 cursor-pointer' 
@@ -483,7 +503,7 @@ const Board = () => {
         setShowInviteModal(true)}}>Invite Members to the board</div>
       </aside>
       <main className='flex-1 text-2xl text-center font-extrabold ml-0 md:ml-64 mb-5'>
-        <div className='bg-amber-800 p-3 w-full text-white mb-6 h-14 flex justify-center items-center'>
+        <div className='bg-blue-950 p-3 w-full text-white mb-6 min-h-14 flex justify-center items-center'>
           {editingBoard?(
             <div className='flex items-center gap-3'>
               <input type="text" className='text-black bg-white p-1' 
@@ -494,7 +514,7 @@ const Board = () => {
               <button className='bg-red-700 p-1 rounded' onClick={()=>{setEditingBoard(false);setEditBoardTitle(savedBoardName);}}>Cancel</button>
             </div>
           ):(
-            <div className='flex items-center gap-3'>
+            <div className='flex items-center top-16 flex-wrap justify-center gap-3'>
               {savedBoardName || 'No board created yet'}
               {savedBoardName &&(
                 <button className='cursor-pointer' title="Edit This Board Name" onClick={()=>{setEditingBoard(true);setEditBoardTitle(savedBoardName)}}>✏️</button>
@@ -517,7 +537,7 @@ const Board = () => {
             savedCategoryName.map(category=>(
               <div
               key={category.id}
-              className='bg-blue-500 text-white px-6 py-4 rounded shadow-lg w-full border hover:border-amber-600'
+              className='bg-blue-950 text-white px-6 py-4 rounded shadow-lg w-full border hover:border-amber-600'
               >
                 <div className='flex justify-between items-center'>
                 {editingCategoryId===category.id?(
@@ -600,7 +620,7 @@ const Board = () => {
                     <textarea type='text' className='bg-white text-black mt-6 font-normal w-full' value={cardInput} onChange={(e)=>setCardInput(e.target.value)}/>
                     <div className='flex gap-2.5'>
                       <button className='bg-orange-600 p-2 mt-4' onClick={()=>handleAddCard(category.id)}>Add Idea</button>
-                      <button className='bg-red-600 p-2 mt-4' onClick={()=>{setActiveCategoryId(null),setCardInput('')}}>Cancel</button>
+                      <button className='bg-red-600 p-2 mt-4' onClick={()=>{setActiveCategoryId(null);setCardInput('')}}>Cancel</button>
                     </div>
                   </div>
                 )}

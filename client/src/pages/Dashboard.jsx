@@ -10,6 +10,7 @@ const Dashboard = () => {
   const {profile}=useContext(AuthContext)
   const navigate=useNavigate();
   const [toast,setToast]=useState(null);
+  const [sidebarOpen,setSidebarOpen]=useState(false);
 
   //Global function to show messages
   const showToast=(message,type="success")=>{
@@ -38,7 +39,8 @@ const Dashboard = () => {
       setDisplaySharedBoards(data.shared);
 
     }catch(err){
-      console.error('Error while fetching boards',err);
+      console.error(err);
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -70,7 +72,8 @@ const Dashboard = () => {
       showToast('Board Deleted Successfully ✅','success');
 
     }catch(err){
-      console.error('Error deleting board',err);
+      console.error(err);
+      showToast("Server error. Please try again ❌", "error");
     }
   }
 
@@ -81,11 +84,18 @@ const Dashboard = () => {
     showLogin={false}
     showSignup={false}
     profile={profile}
+    leftSlot={
+      <button className='md:hidden text-white p-2 ml-auto' onClick={()=>setSidebarOpen(true)}>☰</button>
+    }
     rightSlot={
     <button className='bg-amber-600 p-2 rounded hover:bg-amber-700 transition-colors' onClick={logout}>Logout</button>
     }/>
     <div className="flex">
-      <aside className='fixed hidden md:block bg-blue-950 w-64 justify-center px-2 top-16 left-0 h-[calc(100vh-64px)]'>
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)}/>
+        )}
+      <aside className={`fixed w-64 bg-blue-950 justify-center px-2 top-0 left-0 h-screen lg:h-[calc(100vh-64px)] transform transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:top-16`}>
+        <button className="lg:hidden text-white text-right w-full cursor-pointer" onClick={() => setSidebarOpen(false)}>✖</button>
         <div className='text-white text-3xl pt-2 font-bold text-center'>MENU</div>
         <div className='text-white pt-3 text-2xl font-bold text-center'><Link to='/boards'>Create New Board</Link></div>
       </aside>
