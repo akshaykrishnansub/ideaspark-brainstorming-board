@@ -23,8 +23,6 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser());
 
-const port=process.env.PORT || 5000;
-
 app.use(express.static(path.join(__dirname,'../../client/dist')));
 
 app.use('/api',authRoutes)
@@ -37,6 +35,4 @@ app.get(/.*/,(req,res)=>{
     res.sendFile(path.join(__dirname,'../../client/dist','index.html'))
 })
 
-app.listen(port,()=>{
-    console.log(`Server running on port ${port}`);
-})
+export default app;

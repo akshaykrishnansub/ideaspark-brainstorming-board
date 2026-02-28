@@ -448,7 +448,7 @@ const Board = () => {
       })
       const data=await res.json();
       if(!res.ok){
-        setInviteSuccessMessage(data.message || 'Error inviting user');
+        setInviteSuccessMessage(data.message || 'Error inviting user or User has already been invited');
         return;
       }
       setInviteSuccessMessage('User Invited Successfully ✅');

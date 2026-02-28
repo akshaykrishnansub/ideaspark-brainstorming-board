@@ -51,7 +51,7 @@ const Signup = () => {
     }
     
   }
-
+  
   return (
     <>
     <title>IdeaSpark | Signup</title>
