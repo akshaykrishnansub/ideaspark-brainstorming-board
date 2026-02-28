@@ -1,17 +1,20 @@
 import pg from 'pg';
 import dotenv from 'dotenv'
 
-dotenv.config();
+if(process.env.NODE_ENV!=="production"){
+    dotenv.config();
+}
 
-const db=new pg.Client({
+const db=new pg.Pool({
     user:process.env.DB_USER,
     host:process.env.DB_HOST,
     database:process.env.DB_NAME,
     password:process.env.DB_PASSWORD,
-    port:process.env.DB_PORT
 });
 db.connect()
-.then(()=>console.log("Connected to postgres"))
+.then(client=>{console.log("Connected to postgres")
+    client.release()
+})
 .catch(err=>console.log("Connection error",err))
 
 export default db;
