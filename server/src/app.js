@@ -34,4 +34,15 @@ app.use('/api/boards',boardRoutes)
 app.use('/api/categories',categoryRoutes)
 app.use('/api/cards',cardRoutes)
 
+app.get("/api/test-db", async (req, res) => {
+  try {
+    const result = await db.query("SELECT NOW()");
+    res.json({ connected: true, time: result.rows[0] });
+  } catch (err) {
+    console.error("DB test failed:", err);
+    res.status(500).json({ connected: false, error: "DB connection failed" });
+  }
+});
+
+
 export default app;
