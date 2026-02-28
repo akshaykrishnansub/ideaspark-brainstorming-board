@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import path from "path"
 import { fileURLToPath } from 'url'
-import './config/db.js'
+import db from './config/db.js'
 import authRoutes from './routes/authRoutes.js'
 import boardRoutes from './routes/boardRoutes.js'
 import categoryRoutes from './routes/categoryRoutes.js'
@@ -43,6 +43,11 @@ app.get("/api/test-db", async (req, res) => {
     res.status(500).json({ connected: false, error: "DB connection failed" });
   }
 });
+
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
+
 
 
 export default app;
