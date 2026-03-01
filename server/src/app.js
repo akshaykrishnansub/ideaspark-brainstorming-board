@@ -16,7 +16,7 @@ const __dirname=path.dirname(__filename)
 const app=express();
 const allowedOrigins=[
     "http://localhost:5173",
-    "https://ideaspark-frontend.vercel.app"
+    "ideaspark-brainstorming-board.vercel.app"
 ]
 app.use(cors({
     origin:allowedOrigins,
