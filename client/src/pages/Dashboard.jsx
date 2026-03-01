@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   const fetchBoards=async()=>{
     try{
-      const res=await fetch('http://localhost:5000/api/boards',{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/boards`,{
         method:"GET",
         credentials:"include"
       })
@@ -55,7 +55,7 @@ const Dashboard = () => {
       return;
     }
     try{
-      const res=await fetch(`http://localhost:5000/api/boards/${boardId}`,{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/boards/${boardId}`,{
         method:'DELETE',
         credentials:'include'
       })

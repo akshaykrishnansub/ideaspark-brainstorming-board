@@ -11,7 +11,7 @@ const AuthProvider=({children})=>{
     const getProfile=async()=>{
         setLoading(true);
         try{
-            const res=await fetch('http://localhost:5000/api/me',{
+            const res=await fetch(`${import.meta.env.VITE_API_URL}/api/me`,{
             credentials:"include"
         })
         if(!res.ok)
@@ -33,7 +33,7 @@ const AuthProvider=({children})=>{
     },[]);
 
     const logout=async()=>{
-        await fetch('http://localhost:5000/api/logout',{
+        await fetch(`${import.meta.env.VITE_API_URL}/api/logout`,{
             method:'POST',
             credentials:'include'
         });

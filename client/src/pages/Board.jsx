@@ -68,7 +68,7 @@ const Board = () => {
       return;
     }
     try{
-      const res=await fetch('http://localhost:5000/api/boards',{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/boards`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       credentials:'include',
@@ -99,7 +99,7 @@ const Board = () => {
     }
 
     try{
-      const res=await fetch("http://localhost:5000/api/categories",{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/categories`,{
         method:"POST",
         headers:{'Content-Type':'application/json'},
         credentials:"include",
@@ -135,7 +135,7 @@ const Board = () => {
     }
 
     try{
-      const res=await fetch(`http://localhost:5000/api/boards/${boardId}/cards`,{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/boards/${boardId}/cards`,{
         method:"POST",
         headers:{'Content-Type':'application/json'},
         credentials:"include",
@@ -179,7 +179,7 @@ const Board = () => {
   //code to fetch board data
   const fetchBoardData=async(boardId)=>{
     try{
-      const res=await fetch(`http://localhost:5000/api/boards/${boardId}`,{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/boards/${boardId}`,{
         method:'GET',
         credentials:'include'
       })
@@ -206,7 +206,7 @@ const Board = () => {
       return;
     }
     try{
-      const res=await fetch(`http://localhost:5000/api/cards/${cardId}`,{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/cards/${cardId}`,{
         method:"DELETE",
         credentials:"include"
       }
@@ -241,7 +241,7 @@ const Board = () => {
       return;
     }
     try{
-      const res=await fetch(`http://localhost:5000/api/categories/${categoryId}`,{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/categories/${categoryId}`,{
       method:'DELETE',
       credentials:"include"
     })
@@ -267,7 +267,7 @@ const Board = () => {
       return;
     }
     try{
-      const res=await fetch(`http://localhost:5000/api/cards/${cardId}`,{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/cards/${cardId}`,{
         method:'PUT',
         credentials:'include',
         headers:{'Content-Type':'application/json'},
@@ -304,7 +304,7 @@ const Board = () => {
       return;
     }
     try{
-      const res=await fetch(`http://localhost:5000/api/categories/${categoryId}`,{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/categories/${categoryId}`,{
         method:'PUT',
         credentials:"include",
         headers:{'Content-Type':'application/json'},
@@ -339,7 +339,7 @@ const Board = () => {
       return;
     }
     try{
-      const res=await fetch(`http://localhost:5000/api/boards/${boardId}`,{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/boards/${boardId}`,{
         method:'PUT',
         credentials:'include',
         headers:{'Content-Type':'application/json'},
@@ -422,7 +422,7 @@ const Board = () => {
     })
 
     try{
-      await fetch('http://localhost:5000/api/cards/moveCards',{
+      await fetch(`${import.meta.env.VITE_API_URL}/api/cards/moveCards`,{
         method:"PUT",
         credentials:"include",
         headers:{'Content-Type':'application/json'},
@@ -440,7 +440,7 @@ const Board = () => {
       return;
     }
     try{
-      const res=await fetch(`http://localhost:5000/api/boards/${boardId}/invite`,{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/boards/${boardId}/invite`,{
         method:'POST',
         credentials:'include',
         headers:{'Content-Type':'application/json'},
