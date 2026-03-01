@@ -42,13 +42,13 @@ const login=async(req,res)=>{
             return res.status(401).json({error:'Invalid credentials'});
 
         //generate a token
-        const token=jwt.sign({id:user.id},process.env.JWT_SECRET,{expiresIn:'1h'});
+        const token=jwt.sign({id:user.id},process.env.JWT_SECRET,{expiresIn:'1d'});
 
         //store a token as a cookie
         res.cookie('token',token,{
             httpOnly:true,
             secure:true,
-            maxAge:3600000
+            maxAge:1*24*60*60
         })
         return res.json({message:'Login Successful',token,user:{id:user.id,username:user.username}})
     }catch(err){
