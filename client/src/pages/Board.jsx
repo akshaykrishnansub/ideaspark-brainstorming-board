@@ -42,6 +42,7 @@ const Board = () => {
   const [editBoardTitle,setEditBoardTitle]=useState("");
 
   const [draggedCard,setDraggedCard]=useState(null);
+  const [touchDraggedCard,setTouchDraggedCard]=useState(null);
 
   const [sidebarOpen,setSidebarOpen]=useState(false);
 
@@ -537,6 +538,7 @@ const Board = () => {
             savedCategoryName.map(category=>(
               <div
               key={category.id}
+              data-category-id={category.id}
               className='bg-blue-950 text-white px-6 py-4 rounded shadow-lg w-full border hover:border-amber-600'
               >
                 <div className='flex justify-between items-center'>
@@ -566,6 +568,8 @@ const Board = () => {
                   {category.cards.map((card,index)=>(
                     <div key={card.id}>
                       <div draggable
+                      data-card-id={card.id}
+                      data-category-id={category.id}
                       onDragStart={()=>{
                         setDraggedCard({
                           cardId:card.id,
@@ -573,6 +577,65 @@ const Board = () => {
                           sourceIndex:index
                         })
                       }}
+
+                      //TOUCH START
+                      onTouchStart={()=>{
+                        setTouchDraggedCard({
+                          cardId:card.id,
+                          sourceCategoryId:category.id,
+                          sourceIndex:index
+                        })
+                      }}
+
+                      //TOUCH END (DROP LOGIC FOR TABLET)
+                      onTouchEnd={(e)=>{
+                        if(!touchDraggedCard)
+                          return;
+                        const touch=e.changedTouches[0];
+
+                        const element=document.elementFromPoint(
+                          touch.clientX,
+                          touch.clientY
+                        );
+
+                        if(!element){
+                          setTouchDraggedCard(null);
+                          return;
+                        }
+
+                        const cardElement=element.closest("[data-card-id]");
+                        const categoryElement=element.closest("[data-category-id]");
+                        if(!categoryElement){
+                          setTouchDraggedCard(null);
+                          return;
+                        }
+
+                        const destCategoryId=Number(categoryElement.getAttribute("data-category-id"));
+
+                        let insertIndex=0;
+
+                        const destCategory=savedCategoryName.find(c=>c.id===destCategoryId);
+
+                        if(cardElement){
+                          const rect=cardElement.getBoundingClientRect();
+                          const dropPosition=touch.clientY-rect.top;
+
+                          const targetCardId=Number(cardElement.getAttribute("data-card-id"));
+
+                          const targetIndex=destCategory.cards.findIndex(c=>c.id===targetCardId);
+
+                          insertIndex=dropPosition<rect.height/2?targetIndex:targetIndex+1;
+                        }else{
+                          insertIndex=destCategory.cards.length;
+                        }
+
+                        //syncing with existing drop logic
+                        setDraggedCard(touchDraggedCard);
+                        handleDrop(destCategoryId,insertIndex);
+                        setTouchDraggedCard(null);
+
+                      }}
+
                       onDragOver={(e) => e.preventDefault()}
                       onDrop={(e)=>{
                         e.preventDefault();
@@ -583,7 +646,7 @@ const Board = () => {
                         handleDrop(category.id,insertIndex)
                       }
                       }
-                      className='bg-blue-300 border p-2 font-normal flex justify-between items-center cursor-move'>
+                      className='bg-blue-300 border p-2 font-normal flex justify-between items-center cursor-move touch-none'>
                       {editingCardId===card.id?(
                        <>
                        <div>
