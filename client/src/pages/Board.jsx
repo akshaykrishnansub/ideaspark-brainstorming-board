@@ -647,7 +647,7 @@ const Board = () => {
                         handleDrop(category.id,insertIndex)
                       }
                       }
-                      className='bg-blue-300 border p-2 font-normal flex justify-between items-center cursor-move touch-none'>
+                      className='bg-blue-300 border p-2 font-normal flex justify-between items-center cursor-pointer touch-none'>
                       {editingCardId===card.id?(
                        <>
                        <div>
