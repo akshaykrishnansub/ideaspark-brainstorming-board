@@ -9,3 +9,13 @@ This project was built as part of my internship program and focuses on real-worl
 ## ✨ Features
 
 ### 🧩 Board Management
+- Create new boards
+- Edit board title
+- Persistent board storage
+- Secure authenticated access
+
+### 📂 Category Management
+- Add categories
+- Edit category names
+- Delete categories
+- Real-time UI updates
