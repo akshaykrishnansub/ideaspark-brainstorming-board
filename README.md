@@ -1,1 +1,1 @@
-## 🚀 IdeaSpark – Brainstorming Board
+# 🚀 IdeaSpark – Brainstorming Board
