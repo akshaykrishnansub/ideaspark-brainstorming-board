@@ -116,6 +116,8 @@ backend/
 <img width="1920" height="969" alt="Screenshot (165)" src="https://github.com/user-attachments/assets/44e40aab-88cc-45c9-bc48-cbbf59e30fc6" />
 <img width="1920" height="949" alt="Screenshot (166)" src="https://github.com/user-attachments/assets/ef508f3b-9690-40ce-a5be-6848914577ca" />
 <img width="1920" height="978" alt="Screenshot (167)" src="https://github.com/user-attachments/assets/33a36daa-1ea7-4b51-8ad7-8102158a9b35" />
+
+### Tablet View
 <img width="993" height="975" alt="Screenshot (168)" src="https://github.com/user-attachments/assets/82fede81-5128-470d-9ac0-7c33039ac0ca" />
 
 
