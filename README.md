@@ -128,7 +128,11 @@ backend/
 - Activity logs
 - Dark mode
 
+## 👨‍💻 Author
 
+Akshay Krishnan
+Internship Project – 2026
 
+## 📄 License
 
-
+This project was built for internship evaluation purposes.
