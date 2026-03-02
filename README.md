@@ -89,3 +89,23 @@ This project was built as part of my internship program and focuses on real-worl
 - Optimistic UI updates before DB confirmation
 - Centralized toast notification system
 - RESTful API structure
+
+## 📂 Project Structure
+
+```
+frontend/
+  ├── components/
+  ├── pages/
+  ├── context/
+  ├── App.jsx
+  └── main.jsx
+
+backend/
+  ├── routes/
+  ├── controllers/
+  ├── middleware/
+  ├── models/
+  ├── config/
+  ├── utils/
+  └── app.js
+```
