@@ -1,5 +1,5 @@
 import React, { useContext, useState,useEffect } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams,Link } from 'react-router-dom';
 import Navbar from '../components/Navbar'
 import { AuthContext } from '../context/AuthContext.jsx';
 
@@ -502,7 +502,7 @@ const Board = () => {
           return;
         }
         setShowInviteModal(true)}}>Invite Members to the board</div>
-        <div className='pt-3 px-2 font-bold text-white text-2xl hover:text-amber-700 cursor-pointer'>Return to Dashboard</div>
+        <div className='pt-3 px-2 font-bold text-white text-2xl hover:text-amber-700 cursor-pointer'><Link to="/dashboard">Return to Dashboard</Link></div>
       </aside>
       <main className='flex-1 text-2xl text-center font-extrabold ml-0 md:ml-64 mb-5'>
         <div className='bg-blue-950 p-3 w-full text-white mb-6 min-h-14 flex justify-center items-center'>
