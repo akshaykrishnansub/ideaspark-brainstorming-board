@@ -695,7 +695,7 @@ const Board = () => {
   </div>
   {showModal?(
     <div className='fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center'>
-      <div className='bg-white w-100 p-10 border rounded-lg mb-4'>
+      <div className='bg-white w-100 p-10 border rounded-lg mb-4 mt-16'>
         <label htmlFor="boardName" className='text-center font-bold'>Enter the name of the board here:</label>
         <input type="text" className='w-full p-2 mt-4 border' value={boardName} onChange={(e)=>setBoardName(e.target.value)} name='title'/>
         <div className='flex gap-2'>
