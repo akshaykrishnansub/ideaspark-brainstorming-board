@@ -19,3 +19,16 @@ This project was built as part of my internship program and focuses on real-worl
 - Edit category names
 - Delete categories
 - Real-time UI updates
+
+### 📝 Card Management
+- Add idea cards inside categories
+- Edit card content
+- Delete cards
+- Position tracking for each card
+
+### 🔄 Drag & Drop (Desktop + Tablet Support)
+- Move cards within same category
+- Move cards across categories
+- Dynamic position recalculation
+- Database sync on drop
+- Touch support for tablet devices
