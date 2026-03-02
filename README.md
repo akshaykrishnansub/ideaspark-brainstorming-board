@@ -69,3 +69,23 @@ This project was built as part of my internship program and focuses on real-worl
 - Frontend: Vercel
 - Backend: Vercel
 - Database: Supabase
+
+## 🏗 Architecture Overview
+
+- Boards contain multiple Categories
+- Categories contain multiple Cards
+- Cards maintain a `position` field for drag-and-drop ordering
+- On drag:
+  - UI updates instantly
+  - Positions recalculated
+  - Batch update sent to backend
+  - Database stays consistent
+
+## 🧠 Key Implementation Highlights
+
+- Custom drag-and-drop logic without external DnD libraries
+- Tablet touch event handling
+- Deep state cloning for nested updates
+- Optimistic UI updates before DB confirmation
+- Centralized toast notification system
+- RESTful API structure
