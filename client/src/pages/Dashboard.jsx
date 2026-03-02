@@ -108,7 +108,7 @@ const Dashboard = () => {
             </div>
           </div>
           )}
-        <h1 className='text-3xl text-center pb-4 font-bold'>My Boards</h1>
+        <h1 className='text-3xl text-center pb-4 font-bold mt-10'>My Boards</h1>
         {displayOwnedBoards.length===0?<p className='text-center mb-3'>No Owned Boards to display</p>:(
           displayOwnedBoards.map((board)=>(
             <div key={board.id} onClick={()=>openBoard(board.id)} className='p-4 bg-blue-500 mb-3 text-white rounded cursor-pointer hover:bg-blue-600 h-14 grid'>
