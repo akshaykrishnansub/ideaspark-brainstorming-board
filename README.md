@@ -120,6 +120,14 @@ backend/
 ### Tablet View
 <img width="993" height="975" alt="Screenshot (168)" src="https://github.com/user-attachments/assets/82fede81-5128-470d-9ac0-7c33039ac0ca" />
 
+## 📌 Future Improvements
+
+- Real-time updates with WebSockets
+- Role-based access control
+- Drag preview animation
+- Activity logs
+- Dark mode
+
 
 
 
