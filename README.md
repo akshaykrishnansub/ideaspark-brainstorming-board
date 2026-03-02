@@ -41,5 +41,31 @@ This project was built as part of my internship program and focuses on real-worl
 ### 🔐 Authentication
 - User Registration
 - Login & Logout
+
+### 📱 Fully Responsive
+- Desktop
+- Tablet
+- Sidebar toggle for small screens
 - Token-based authentication
 - Protected routes
+
+## 🛠 Tech Stack
+
+### Frontend
+- React (Vite)
+- Tailwind CSS
+- React Router
+- Context API (Auth Management)
+
+### Backend
+- Node.js
+- Express.js
+- REST API Architecture
+
+### Database
+- PostgreSQL (via Supabase)
+
+### Deployment
+- Frontend: Vercel
+- Backend: Vercel
+- Database: Supabase
