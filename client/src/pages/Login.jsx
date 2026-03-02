@@ -51,7 +51,7 @@ function Login(){
             setProfile(data.user);
             navigate("/dashboard")
         }catch(err){
-            setError('Server error');
+            setError('Please enter the correct Login credentials');
         }
 
 

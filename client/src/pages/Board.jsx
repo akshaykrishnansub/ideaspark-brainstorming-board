@@ -502,7 +502,7 @@ const Board = () => {
           return;
         }
         setShowInviteModal(true)}}>Invite Members to the board</div>
-        <div>Return to Dashboard</div>
+        <div className='pt-3 px-2 font-bold text-white text-2xl hover:text-amber-700 cursor-pointer'>Return to Dashboard</div>
       </aside>
       <main className='flex-1 text-2xl text-center font-extrabold ml-0 md:ml-64 mb-5'>
         <div className='bg-blue-950 p-3 w-full text-white mb-6 min-h-14 flex justify-center items-center'>
