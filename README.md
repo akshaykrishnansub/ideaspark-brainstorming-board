@@ -5,3 +5,7 @@ This project was built as part of my internship program and focuses on real-worl
 
 ## 🌐 Live Demo
 🔗 Production URL: https://ideaspark-brainstorming-board-1x89.vercel.app/
+
+## ✨ Features
+
+### 🧩 Board Management
