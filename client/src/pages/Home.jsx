@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <>
     <Navbar />
-    <section className='p-10 text-center'>
+    <section className='p-10 text-center mt-10'>
         <h1 className='font-bold text-4xl text-slate-900'>Turn Scattered Thoughts into Powerful Ideas</h1>
         <p className="p-6 font-bold">Brainstorm, organize, and collaborate on ideas in one smart, visual workplace built for creators, students and teams.</p>
         <div className="flex gap-7 justify-center pt-2">
