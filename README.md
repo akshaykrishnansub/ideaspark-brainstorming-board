@@ -10,7 +10,8 @@ This project was built as part of my internship program and focuses on real-worl
 
 ### 🧩 Board Management
 - Create new boards
-- Edit board title
+- Edit board title (Board Owner only)
+- Delete board (Board Owner only)
 - Persistent board storage
 - Secure authenticated access
 
@@ -36,3 +37,9 @@ This project was built as part of my internship program and focuses on real-worl
 ### 👥 Collaboration
 - Invite members to board via email
 - Multi-user board access
+
+### 🔐 Authentication
+- User Registration
+- Login & Logout
+- Token-based authentication
+- Protected routes
