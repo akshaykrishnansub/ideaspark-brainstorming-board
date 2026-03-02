@@ -32,3 +32,7 @@ This project was built as part of my internship program and focuses on real-worl
 - Dynamic position recalculation
 - Database sync on drop
 - Touch support for tablet devices
+
+### 👥 Collaboration
+- Invite members to board via email
+- Multi-user board access
