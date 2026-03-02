@@ -109,3 +109,8 @@ backend/
   ├── utils/
   └── app.js
 ```
+
+## Screenshots
+
+<img width="1920" height="969" alt="Screenshot (164)" src="https://github.com/user-attachments/assets/e82e0fca-b870-48c0-9ec2-67f5ba5a2695" />
+
