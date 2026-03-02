@@ -515,7 +515,7 @@ const Board = () => {
               <button className='bg-red-700 p-1 rounded' onClick={()=>{setEditingBoard(false);setEditBoardTitle(savedBoardName);}}>Cancel</button>
             </div>
           ):(
-            <div className='flex items-center top-16 flex-wrap justify-center gap-3'>
+            <div className='flex items-center top-16 flex-wrap justify-center gap-3 mt-16'>
               {savedBoardName || 'No board created yet'}
               {savedBoardName &&(
                 <button className='cursor-pointer' title="Edit This Board Name" onClick={()=>{setEditingBoard(true);setEditBoardTitle(savedBoardName)}}>✏️</button>
@@ -695,7 +695,7 @@ const Board = () => {
   </div>
   {showModal?(
     <div className='fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center'>
-      <div className='bg-white w-100 p-10 border rounded-lg mb-4 mt-16'>
+      <div className='bg-white w-100 p-10 border rounded-lg mb-4'>
         <label htmlFor="boardName" className='text-center font-bold'>Enter the name of the board here:</label>
         <input type="text" className='w-full p-2 mt-4 border' value={boardName} onChange={(e)=>setBoardName(e.target.value)} name='title'/>
         <div className='flex gap-2'>
