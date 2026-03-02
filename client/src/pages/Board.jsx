@@ -504,9 +504,9 @@ const Board = () => {
         setShowInviteModal(true)}}>Invite Members to the board</div>
       </aside>
       <main className='flex-1 text-2xl text-center font-extrabold ml-0 md:ml-64 mb-5'>
-        <div className='bg-blue-950 p-3 w-full text-white mb-6 min-h-14 flex justify-center items-center mt-16'>
+        <div className='bg-blue-950 p-3 w-full text-white mb-6 min-h-14 flex justify-center items-center'>
           {editingBoard?(
-            <div className='flex items-center gap-3'>
+            <div className='flex items-center gap-3 mt-16 '>
               <input type="text" className='text-black bg-white p-1' 
               value={editBoardTitle}
               onChange={(e)=>setEditBoardTitle(e.target.value)}
