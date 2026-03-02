@@ -88,7 +88,7 @@ const Dashboard = () => {
       <button className='md:hidden text-white p-2 ml-auto' onClick={()=>setSidebarOpen(true)}>☰</button>
     }
     rightSlot={
-    <button className='bg-amber-600 p-2 rounded hover:bg-amber-700 transition-colors' onClick={logout}>Logout</button>
+    <button className='bg-amber-600 p-2 rounded hover:bg-amber-700 transition-colors cursor-pointer' onClick={logout}>Logout</button>
     }/>
     <div className="flex">
       {sidebarOpen && (
