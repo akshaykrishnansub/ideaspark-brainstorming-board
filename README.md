@@ -135,4 +135,4 @@ Internship Project – 2026
 
 ## 📄 License
 
-This project was built for internship evaluation purposes.
+This project was built for internship evaluation purposes with Euron.one (Engagesphere Technology Privated Limited)
